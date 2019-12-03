@@ -1,0 +1,20 @@
+Package: makehtml
+Type: Package
+Title: Provides Generic Code for Producing Tabbed HTML for Presenting Plotted Results
+Version: 0.0.1
+Date: 2019-12-04
+Authors@R: person("Malcolm", "Haddon", email = "malcolm.haddon@gmail.com", role = c("aut", "cre"))
+Maintainer: Malcolm Haddon <malcolm.haddon@gmail.com>
+Description: Contains code to include Cascading Style Sheet codes into a series of HTML files
+    each of which constitutes a tab into a Home HTML file. Initially this is designed for use
+    with the Abalone projects I am working on but I will will also work to generalize this for
+    any project that could generate graphics and tables. Currently tables are not implemented 
+    and the grpahics files need to be .png files.
+Depends: R (>= 3.5.0)
+License: GPL (>= 3)
+RoxygenNote: 6.1.1
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Encoding: UTF-8
