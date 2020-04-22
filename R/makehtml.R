@@ -29,4 +29,5 @@
 NULL
 
 #' @importFrom utils browseURL packageDescription read.csv 
+#' @importFrom grDevices dev.off
 NULL

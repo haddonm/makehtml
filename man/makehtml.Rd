@@ -3,7 +3,6 @@
 \docType{package}
 \name{makehtml}
 \alias{makehtml}
-\alias{makehtml-package}
 \title{makehtml functions to generate tabbed HTML output files}
 \description{
 The makehtml package is designed to assist with the presentation
