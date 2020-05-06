@@ -1,8 +1,8 @@
 Package: makehtml
 Type: Package
 Title: Provides Generic Code for Producing Tabbed HTML for Presenting Plotted Results
-Version: 0.0.2
-Date: 2020-04-22
+Version: 0.0.0.8600
+Date: 2020-05-06
 Authors@R: person("Malcolm", "Haddon", email = "malcolm.haddon@gmail.com", role = c("aut", "cre"))
 Maintainer: Malcolm Haddon <malcolm.haddon@gmail.com>
 Description: Contains code to include Cascading Style Sheet codes into a series of HTML files
@@ -12,7 +12,7 @@ Description: Contains code to include Cascading Style Sheet codes into a series 
     and the grpahics files need to be .png files.
 Depends: R (>= 3.5.0)
 License: GPL (>= 3)
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 Suggests: 
     knitr,
     rmarkdown

@@ -1,0 +1,106 @@
+---
+title: "Using makehtml"
+author: "Malcolm Haddon"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using makehtml}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+<style type="text/css">
+  body, td {
+     font-size: 15px;
+  }
+  code.r{
+    font-size: 15px;
+  }
+  pre {
+    font-size: 8px
+  }
+</style>
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE
+)
+
+options(knitr.kable.NA = "",
+        knitr.table.format = "pandoc")
+
+options("show.signif.stars"=FALSE,
+        "stringsAsFactors"=FALSE,
+        "max.print"=50000,
+        "width"=240)
+
+library(knitr)
+
+pgwid=75
+```
+
+# Introduction
+
+__makehtml__ is an R package designed to provide the capacity to generate a local drive-based website designed to quickly display plots and tables from an analysis. Obviously the analysis would need to be reasonably complex with multiple facets to make this worthwhile, but, for example, stock assessments provide a good example of the type of analysis where such a display option would be useful. The example used here will involve a simple surplus production stock assessment deriving from an example in _Using R for Modelling and Quantitative Methods in Fisheries_ (Haddon, 2020). 
+
+The principle behind using __makehtml__ is one identifies a 'resultsdirectory' into which all plots are saved with unique filenames, as .png files. Similarly, the contents of all tables will be saved as .RData files, each with unique names. Each separate run of the analysis will be given a unique _runname_ and the filenames will, in each case, have this runname as a postfix. For example, you might produce  schaefer_residuals_run1.png, where _schaefer_residuals_ is the filename of the plot, and _run1_ is the name of the run (you may wish to generate more meaningful runnames).
+
+## A Potential Work-Flow
+
+In any stock assessment (and similarly with other analyses) there will be a series of steps followed to get to the final results. In the listing below the simple line _5. fit alternative models to the data_, might encompass multiple trials of using different initial parameter values. 
+
+1. we set-up our R environment, and identify a result directory 
+2. select a data-set,
+3. make a set of assumptions concerning model constants,
+4. characterize the data-set in tables and plots,
+5. fit alternative models to the data (Schaefer and Fox), 
+6. Tabulate and plot up the model fits, then
+7. characterize the uncertainy in each assessment, and
+8. possibly make projections under different management scenarios.
+
+
+In fact, lines 5 - 8 all involve potentially a great deal of work. But all of these will involve the generation of tables and or plots. This is where __malehtml__ becomes an active participant. We need to identify a directory path into which all such results will be stored and each run will be given a unique name. Assuming such analyses will be repeated for alternative species or in different years with increasing data, I would recommend generating plot files ('filename_runname.png') and table data files ('filename_runname.RData') with the same prefix names for each type of plot or table you generate. 
+
+This will all be easier to understand with a worked example, though of course, on your own machine it would be undoubtedly be best to select your own result directory. First we call the required R libraries and designate a results directory.
+
+
+```{r, "setup"}
+library(MQMF)
+library(makehtml)
+library(knitr) # in fact, already called setting up this vignette
+resdir <- paste0(getwd(),"/data-raw/results")
+
+
+data(schaef)   # the data-set used - the original yellowfin tuna data
+```
+
+
+
+
+
+# References
+
+Haddon, M. (2020) _Using R for Modelling and Quantitative Methods in Fisheries_. Chapman & Hall, CRC Press. Boca Raton 354p. ISBN 9780367469894
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
