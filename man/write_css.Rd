@@ -8,7 +8,8 @@ write_css(resdir)
 }
 \arguments{
 \item{resdir}{the directory within the run directory that contains
-all the plot results}
+ all the plot results
+#  was in 466       '      border: 1px solid #ddd; ',}
 }
 \value{
 nothing but it does generate a .css file in the resdir

@@ -74,14 +74,65 @@ This will all be easier to understand with a worked example, though of course, o
 library(MQMF)
 library(makehtml)
 library(knitr) # in fact, already called setting up this vignette
-resdir <- paste0(getwd(),"/data-raw/results")
-
-
+#indir <- tempdir()
+indir <- "C:/Users/User/Dropbox/rcode2/makehtml/data-raw"
+resdir <- filenametopath(indir,"result")
+dirExists(resdir,verbose=TRUE)
+runlabel <- "runone"
+resfile <- setuphtml(resdir,runlabel)
 data(schaef)   # the data-set used - the original yellowfin tuna data
 ```
 
+First tabulate the original data.
+
+```{r}
+filen <- filenametopath(resdir,"schaef.csv")
+caption <- "Schaefer's original 1957 Yellowfin Tuna fishery data."
+htmltable(schaef,filename=filen,caption=caption)
+logfilename(filen,resfile,category="Schaefer",caption=caption)
+```
 
 
+Now plot the fishery data
+
+
+
+```{r}
+file <- paste0("Schaefer_Fisherydata",runlabel,".png")
+filename <- filenametopath(resdir,file)  #  filename=""
+plotprep(width=7,height=4.5,newdev=FALSE,filename=filename,cex=0.9,
+         verbose=FALSE)
+
+parset(plots=c(2,1))
+ymax <- getmax(schaef$cpue)
+plot(schaef$year,schaef$cpue,type="l",lwd=2,ylim=c(0,ymax),
+     panel.first=grid(),xlab="",ylab="CPUE")
+ymax <- getmax(schaef$catch)
+plot(schaef$year,schaef$catch,type="l",lwd=2,ylim=c(0,ymax),
+     panel.first=grid(),xlab="",ylab="Catch")
+dev.off()
+
+caption <- "The Schaefer Yellowfin tuna fishery data from 1957."
+logfilename(filename,resfile=resfile,"Schaefer",caption)
+```
+
+
+```{r}
+
+ reportlist <- list(
+   runname=runlabel,
+   starttime=0,endtime=2
+ )
+ str(reportlist,max.level = 1)
+
+ runnotes <- "This is merely to illustrate how to use the package."
+
+#  source(filenametopath(sourcedir,"sourcer.R"))
+ make_html(replist=reportlist,resdir=resdir,width=500,
+           openfile=TRUE,runnotes=runnotes,verbose=FALSE)
+
+
+```
 
 
 # References

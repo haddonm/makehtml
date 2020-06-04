@@ -1,4 +1,40 @@
 
+#' @title addtable adds a table to the output
+#'
+#' @description addtable saves a table as a csv file into the resdir.
+#'     Then it logs the filename in the the csv file containing the 
+#'     names of each file to be plotted or tabulated. This function 
+#'     saves having to combined the filename with the resdir, and then
+#'     does the filename logging for you. If no category is added 
+#'     explicitly then the local webpage will have an 'any' tab 
+#'     containing these unloved results.
+#'
+#' @param intable the table or data.frame to be saved and output
+#' @param filen the full path and filename being given to the table
+#' @param resfile the file to be added to, which is defined by
+#'     setuphtml found in aMSE_utils
+#' @param category what HTML tab should it be added to? default="any"
+#' @param caption the caption for the figure or table, default = ""
+#'
+#' @return nothing but it does add a line to resfile and saves a csv 
+#'     file to resdir
+#' @export
+#'
+#' @examples
+#' indir <- tempdir()
+#' resdir <- filenametopath(indir,"result")
+#' dirExists(resdir,verbose=FALSE)
+#' resfile <- setuphtml(resdir,"example_only")
+#' filen <- "example.csv")
+#' egtable <- matrix(rnorm(25,0,1),nrow=5,ncol=5)
+#' addtable(egtable,filen=filen,resfile=resfile,"A_category",
+#'             caption="An example Table")
+#' dir(resdir) # examine the resfile and the example.csv files.
+addtable <- function(intable,filen,resfile,category="any",caption="") {
+  write.table(intable,file = filen,sep=",")
+  logfilename(filen,resfile,category=category,caption=caption)
+} # end of addtable
+
 #' @title dirExists: Checks for the existence of a directory
 #'
 #' @description dirExists: does a directory exist? It uses dir.exists
@@ -116,6 +152,7 @@ htmltable <- function(inmat,filename,caption) {
   numrow <- length(rows)
   columns <- colnames(inmat)
   numcol <- length(columns)
+  cat('<div > \n',  file=filename,  append=TRUE)
   cat('<br><br> \n',file=filename,append=TRUE)
   cat('<table> \n',file=filename,append=TRUE)
   cat('<caption> ',caption,'</caption> \n',file=filename,append=TRUE)
@@ -135,7 +172,8 @@ htmltable <- function(inmat,filename,caption) {
       cat(' <th>',inmat[rw,cl],'</th> \n',file=filename,append=TRUE)
     cat('</tr> \n',file=filename,append=TRUE)
   }
-  cat('</table>',file=filename,append=TRUE)
+  cat('</table> \n',file=filename,append=TRUE)
+  cat("</div> \n",  file=filename,  append=TRUE)
 } # end of htmltable
 
 #' @title logfilename adds a filename to the autoresult csv file
@@ -190,7 +228,7 @@ logfilename <- function(filename,resfile,category="any",caption="") {
 #'     and put in the same directory.
 #'
 #' @param replist Object created by an aMSE run
-#' @param rundir Directory where a particular run's files,
+#' @param resdir Directory where a particular run's files,
 #'     including the region files, the results, as tables and plots,
 #'     and any other files, are all held. It will always contain at
 #'     least the 'data' and 'results' sub-directories.
@@ -202,29 +240,27 @@ logfilename <- function(filename,resfile,category="any",caption="") {
 #'
 #' @export
 make_html <- function(replist=NULL,
-                      rundir=NULL,
+                      resdir=NULL,
                       width=500,
                       openfile=TRUE,
                       runnotes=NULL,
                       verbose=TRUE) {
-  # replist=reportlist;rundir=rundir;width=500;openfile=TRUE;runnotes=runnotes;verbose=FALSE
+  # replist=reportlist;resdir=resdir;width=500;openfile=TRUE;runnotes=runnotes;verbose=TRUE
   # Clarify data
-  resdir <- filenametopath(rundir,"results")
   if(is.null(resdir)) stop("input 'resdir' required \n")
   write_css(resdir)
   filenames <- dir(resdir)
   filetable <- filenames[grep("resultTable",filenames)]
-  if(length(filetable)==0) stop("No resultTable, did the run fail? \n")
+  if(length(filetable)==0) stop("No resultTable, what went wrong? \n")
   filename <- filenametopath(resdir,filetable)
   tablefile <- read.csv(filename,colClasses = "character")
   if(!is.data.frame(tablefile))
-    stop("The list of files to plot needs to be a data.frame \n")
-  #tablefile$TimeMade <- as.POSIXlt(tablefile$png_time)
+    stop("The list of files to output needs to be a data.frame \n")
   tablefile$basename <- basename(as.character(tablefile$file))
   tablefile$dirname <- resdir
   # identify the categories and name each html file
-  categories <- unique(tablefile$category)
-  types <- tablefile$type
+  categories <- unique(tablefile$category)  # html tab names
+  types <- tablefile$type   #  table or plot
   for (icat in 0:length(categories)) { # icat=1
     if(icat==0){
       category <- "Home"
@@ -236,7 +272,7 @@ make_html <- function(replist=NULL,
       htmlfile <- paste0(resdir,"/aMSEout_",category,".html")
       if(verbose) cat("tab HTML file with output will be:\n",htmlfile,'\n')
     }
-    write_head(htmlfile)
+    makehtml:::write_head(htmlfile)
     cat('<body> \n',file=htmlfile, append=TRUE)
     cat('<!-- Site navigation menu -->\n',
         '  <ul id="tabnav">\n',file=htmlfile, append=TRUE)
@@ -247,12 +283,12 @@ make_html <- function(replist=NULL,
             file=htmlfile, append=TRUE)
       }else{
         tab <- categories[itab]
-        cat('    <li class="tab',itab+1,'"><a href="aMSEout_',tab,'.html">',tab,'</a></li>\n',sep="",
+        cat('    <li class="tab1"><a href="aMSEout_',tab,'.html">',tab,'</a></li>\n',sep="",
             file=htmlfile, append=TRUE)
       }
     }
     cat('  </ul>\n', file=htmlfile, append=TRUE)
-
+    
     if (category=="Home") {    # add text on "Home" page
       newcat <- "Run Details"
       cat('\n\n<h2><a name="', category, '">', newcat, '</a></h2>\n', sep="",
@@ -267,13 +303,13 @@ make_html <- function(replist=NULL,
       }
       cat('\n\n<p>',MSE_info_text,'</p>\n',
           '<p><b>Name of Run: </b>',replist$runname,'</p>\n',
-          '<p><b>Directory: </b>',rundir,'</p>\n',
+          '<p><b>Directory: </b>',resdir,'</p>\n',
           '<p><b>Starting time of model: </b>',
           replist$starttime,'</p>\n',
           '<p><b>End time of model: </b>',
           replist$endtime,'</p>\n\n',
           sep="",file=htmlfile, append=TRUE)
-
+      
       if (!is.null(runnotes)) {
         for(i in 1:length(runnotes)) {
           cat('<p><b>Notes:</b>\n',paste(runnotes,collapse='</b>\n'),
@@ -301,7 +337,7 @@ make_html <- function(replist=NULL,
         }
       }
     } # end of category if else statement
-
+    
     cat("\n\n</body>\n</html>", file=htmlfile, append=TRUE)
   }
   # open HTML file automatically:
@@ -391,7 +427,7 @@ setuphtml <- function(resdir, runname) {  # resdir=resdir; runname=runname
 #'
 #' @param resdir the directory within the run directory that contains
 #'     all the plot results
-#'
+#'    #  was in 466       '      border: 1px solid #ddd; ', 
 #' @return nothing but it does generate a .css file in the resdir
 write_css <- function(resdir) {
   filename <- filenametopath(resdir,"aMSEout.css")
@@ -418,7 +454,7 @@ write_css <- function(resdir) {
       '      display: inline;\n',
       '    }\n',
       '    \n',
-      '    #tab1 li.tab1, #tab2 li.tab2, #tab3 li.tab3, #tab4 li.tab4 { /* settings for selected tab */\n',
+      '    #tab1 li.tab1 { /* settings for selected tab */\n',
       '      border-bottom: 1px solid #fff; /* set border color to page background color */\n',
       '      background-color: #fff; /* set background color to match above border color */\n',
       '    }\n',
@@ -462,16 +498,22 @@ write_css <- function(resdir) {
       '    .odd {\n',
       '      background-color: #cfc;\n ',
       '    } \n',
+      '    div { \n',
+      '       padding: 0px;\n ',
+      '      border-collapse: collapse; \n ',
+      '       height: 500px;\n ',
+      '       width: 90%;\n ',      
+      '       overflow-x: scroll;\n ',
+      '       overflow-y: scroll;\n ',
+      '    }',
       '    table { \n',
-      '      table-layout: fixed; \n',
-      '      font-size: 15px; \n',
-      '      border: 1px solid black;\n',
-      '      border-collapse: collapse; \n',
+      '      margin-left: auto;\n',
+      '      margin-right: auto;\n ',
       '    } \n',
       '    th, td {\n',
       '      padding: 5px; \n',
       '      border: 1px solid black;\n',
-      '      border-collapse: collapse; \n',
+      '      border-collapse: collapse; \n ',
       '    }\n',
       '    th { \n',
       '       text-align: right; \n',

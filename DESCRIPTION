@@ -1,8 +1,8 @@
 Package: makehtml
 Type: Package
 Title: Provides Generic Code for Producing Tabbed HTML for Presenting Plotted Results
-Version: 0.0.0.8600
-Date: 2020-05-06
+Version: 0.0.0.8500
+Date: 2020-06-04
 Authors@R: person("Malcolm", "Haddon", email = "malcolm.haddon@gmail.com", role = c("aut", "cre"))
 Maintainer: Malcolm Haddon <malcolm.haddon@gmail.com>
 Description: Contains code to include Cascading Style Sheet codes into a series of HTML files
