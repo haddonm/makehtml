@@ -32,13 +32,15 @@ addtable saves a table as a csv file into the resdir.
     containing these unloved results.
 }
 \examples{
+\dontrun{
 indir <- tempdir()
 resdir <- filenametopath(indir,"result")
 dirExists(resdir,verbose=FALSE)
 resfile <- setuphtml(resdir,"example_only")
-filen <- "example.csv")
+filen <- "example.csv"
 egtable <- matrix(rnorm(25,0,1),nrow=5,ncol=5)
 addtable(egtable,filen=filen,resfile=resfile,"A_category",
             caption="An example Table")
 dir(resdir) # examine the resfile and the example.csv files.
+}
 }

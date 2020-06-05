@@ -21,15 +21,17 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' indir <- tempdir()
 #' resdir <- filenametopath(indir,"result")
 #' dirExists(resdir,verbose=FALSE)
 #' resfile <- setuphtml(resdir,"example_only")
-#' filen <- "example.csv")
+#' filen <- "example.csv"
 #' egtable <- matrix(rnorm(25,0,1),nrow=5,ncol=5)
 #' addtable(egtable,filen=filen,resfile=resfile,"A_category",
 #'             caption="An example Table")
 #' dir(resdir) # examine the resfile and the example.csv files.
+#' }
 addtable <- function(intable,filen,resfile,category="any",caption="") {
   write.table(intable,file = filen,sep=",")
   logfilename(filen,resfile,category=category,caption=caption)
@@ -272,7 +274,7 @@ make_html <- function(replist=NULL,
       htmlfile <- paste0(resdir,"/aMSEout_",category,".html")
       if(verbose) cat("tab HTML file with output will be:\n",htmlfile,'\n')
     }
-    makehtml:::write_head(htmlfile)
+    write_head(htmlfile)
     cat('<body> \n',file=htmlfile, append=TRUE)
     cat('<!-- Site navigation menu -->\n',
         '  <ul id="tabnav">\n',file=htmlfile, append=TRUE)
@@ -501,7 +503,7 @@ write_css <- function(resdir) {
       '    div { \n',
       '       padding: 0px;\n ',
       '      border-collapse: collapse; \n ',
-      '       height: 500px;\n ',
+      '       height: 350px;\n ',
       '       width: 90%;\n ',      
       '       overflow-x: scroll;\n ',
       '       overflow-y: scroll;\n ',

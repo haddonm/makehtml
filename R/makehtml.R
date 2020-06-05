@@ -28,6 +28,6 @@
 #' @name makehtml
 NULL
 
-#' @importFrom utils browseURL packageDescription read.csv 
+#' @importFrom utils browseURL packageDescription read.csv write.table
 #' @importFrom grDevices dev.off
 NULL
