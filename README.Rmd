@@ -1,33 +1,33 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
 
 # makehtml
 
 <!-- badges: start -->
-
 <!-- badges: end -->
 
-Generic R code for producing multi-tabbed HTML output for plotted
-results in a specific directory. The objective is to provide a standard
-method for an initial presentation of extensive results from an
-analysis. Rmarkdown is wondferful but sometimes one just needs to review
-the data and the results and so needs a convenient way of viewing tables
-and plots. makehtml aims to provide that method.
+Generic R code for producing multi-tabbed HTML output for plotted results in a specific directory. The objective is to provide a standard method for an initial presentation of extensive results from an analysis. Rmarkdown is wondferful but sometimes one just needs to review the data and the results and so needs a convenient way of viewing tables and plots. makehtml aims to provide that method.
 
-This code is adapted and revised from code put together by Ian Taylor
-inside the R package **r4ss**. Essentially it creates a CSS3 file that
-is used by a series of HTML files, each of which represents a user
-defined category of results. All plots should be .png files, and all
-tables are derived from saved .csv files. All files, the CSS, HTML, .png
-and csv files are saved to a user defined directory (*resdir*), which is
-the main user input requirement.
+This code is adapted and revised from code put together by Ian Taylor inside the R package __r4ss__. Essentially it creates a CSS3 file that is used by a series of HTML files, each of which represents a user defined category of results. All plots should be .png files, and all tables are derived from saved .csv files. All files, the CSS, HTML, .png and csv files are saved to a user defined directory (_resdir_), which is the main user input requirement. 
+
 
 ## Installation
 
-You can install the development version from
-[GitHub](https://github.com/haddonm/aMSE) with:
+You can install the development version from [GitHub](https://github.com/haddonm/aMSE) with:
 
-``` r
+```{r echo=TRUE, eval=FALSE}
 if (!require(devtools)){install.packages("devtools")} 
 
 devtools::install_github("https://github.com/haddonm/makehtml")
@@ -35,25 +35,19 @@ devtools::install_github("https://github.com/haddonm/makehtml")
 you will also need rutilsMH
 
 devtools::install_github("https://github.com/haddonm/rutilsMH")
+
 ```
 
-Alternatively, you can generate a branch that you can work on by cloning
-the repository, which, again, can be done very simply within RStudio.
-Open the New Project option in the project dialog at the top right of
-the RStudio screen and selection Version Control, then use
-‘<https://github.com/haddonm/makehtml>’ in the top box, identify where
-you want the new directory put, and press return.
+Alternatively, you can generate a branch that you can work on by cloning the repository, which, again, can be done very simply within RStudio. Open the New Project option in the project dialog at the top right of the RStudio screen and selection Version Control, then use 'https://github.com/haddonm/makehtml' in the top box, identify where you want the new directory put, and press return.
 
-It would be a good idea to read Hadley Wickham’s draft chapter on Git
-and GitHub at <https://r-pkgs.org/index.html>.
+It would be a good idea to read Hadley Wickham's draft chapter on Git and GitHub at https://r-pkgs.org/index.html.
+
 
 ## Example
 
-This is a basic example which illustrates the use of makehtml, though I
-have hashed out the final call to *make\_html* so that the RMarkdown
-version of the readme.md file does not generate a local website:
+This is a basic example which illustrates the use of makehtml, though I have hashed out the final call to _make_html_ so that the RMarkdown version of the readme.md file does not generate a local website:
 
-``` r
+```{r example}
 library(makehtml)
 library(rutilsMH) # for plotprep and parset
 starttime <- as.character(Sys.time())
@@ -62,7 +56,6 @@ starttime <- as.character(Sys.time())
 indir <- "C:/Users/User/Dropbox/rcode2/makehtml/data-raw" 
 resdir <- filenametopath(indir,"result")
 dirExists(resdir,verbose=TRUE)
-#> C:/Users/User/Dropbox/rcode2/makehtml/data-raw/result :  exists
 runlabel <- "runone"
 resfile <- setuphtml(resdir=resdir,runname=runlabel)
 # Some data
@@ -130,10 +123,6 @@ reportlist <- list(  #these 3 are minimal requirements for the replist
   starttime=starttime,endtime=endtime
 )
 str(reportlist,max.level = 1)
-#> List of 3
-#>  $ runname  : chr "runone"
-#>  $ starttime: chr "2020-06-05 13:10:53"
-#>  $ endtime  : chr "2020-06-05 13:10:54"
 
 runnotes <- "This is merely to illustrate how to use the package."
 # If you unhash the make_html component it will open the local 
@@ -142,4 +131,7 @@ runnotes <- "This is merely to illustrate how to use the package."
 #
 # make_html(replist=reportlist,resdir=resdir,width=500,openfile=TRUE,
 #          runnotes=runnotes,verbose=FALSE,packagename="makehtml")
+
 ```
+
+

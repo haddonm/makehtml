@@ -10,16 +10,16 @@ make_html(
   width = 500,
   openfile = TRUE,
   runnotes = NULL,
-  verbose = TRUE
+  verbose = TRUE,
+  packagename = "aMSE"
 )
 }
 \arguments{
-\item{replist}{Object created by an aMSE run}
+\item{replist}{Object created by a run, can be NULL}
 
-\item{resdir}{Directory where a particular run's files,
-including the region files, the results, as tables and plots,
-and any other files, are all held. It will always contain at
-least the 'data' and 'results' sub-directories.}
+\item{resdir}{Directory where a particular run's files, including 
+any results, as tables and plots, and any other files, are all 
+held.}
 
 \item{width}{Width of plots (in pixels). Default = 500}
 
@@ -28,6 +28,9 @@ least the 'data' and 'results' sub-directories.}
 \item{runnotes}{Add additional notes to home page.}
 
 \item{verbose}{Display more info while running this function?}
+
+\item{packagename}{name of the main package being used in the 
+analysis. default='aMSE'}
 }
 \description{
 make_html writes a set of HTML files with tabbed

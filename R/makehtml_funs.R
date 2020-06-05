@@ -193,7 +193,9 @@ htmltable <- function(inmat,filename,caption) {
 #' @param resfile the file to be added to, which is defined by
 #'     setuphtml found in aMSE_utils
 #' @param category what HTML tab should it be added to? default="any"
-#' @param caption the caption for the figure or table, default = ""
+#' @param caption the caption for the figure or table, default = "",
+#'     This should not contain commas as this confuses the csv file.
+#'     But if you accidently put some in they will be removed.
 #'
 #' @return nothing but it does add a line to resfile
 #' @export
@@ -212,6 +214,7 @@ htmltable <- function(inmat,filename,caption) {
 #' dir(resdir)
 logfilename <- function(filename,resfile,category="any",caption="") {
   type <- getextension(filename)
+  caption <- gsub(",","",caption)  # remove commas
   cat(c(filename,category,type,as.character(Sys.time()),caption," \n"),
       file=resfile,sep=",",append=TRUE)
 }
@@ -229,15 +232,17 @@ logfilename <- function(filename,resfile,category="any",caption="") {
 #'     added by aMSE. HTML files are written to link to these plots
 #'     and put in the same directory.
 #'
-#' @param replist Object created by an aMSE run
-#' @param resdir Directory where a particular run's files,
-#'     including the region files, the results, as tables and plots,
-#'     and any other files, are all held. It will always contain at
-#'     least the 'data' and 'results' sub-directories.
+#' @param replist Object created by a run, can be NULL
+#' @param resdir Directory where a particular run's files, including 
+#'     any results, as tables and plots, and any other files, are all 
+#'     held.
 #' @param width Width of plots (in pixels). Default = 500
 #' @param openfile Automatically open index.html in default browser?
 #' @param runnotes Add additional notes to home page.
 #' @param verbose Display more info while running this function?
+#' @param packagename name of the main package being used in the 
+#'     analysis. default='aMSE'
+#'     
 #' @author Originally Ian Taylor, modified by Malcolm Haddon
 #'
 #' @export
@@ -246,7 +251,8 @@ make_html <- function(replist=NULL,
                       width=500,
                       openfile=TRUE,
                       runnotes=NULL,
-                      verbose=TRUE) {
+                      verbose=TRUE,
+                      packagename="aMSE") {
   # replist=reportlist;resdir=resdir;width=500;openfile=TRUE;runnotes=runnotes;verbose=TRUE
   # Clarify data
   if(is.null(resdir)) stop("input 'resdir' required \n")
@@ -285,8 +291,8 @@ make_html <- function(replist=NULL,
             file=htmlfile, append=TRUE)
       }else{
         tab <- categories[itab]
-        cat('    <li class="tab1"><a href="aMSEout_',tab,'.html">',tab,'</a></li>\n',sep="",
-            file=htmlfile, append=TRUE)
+        cat('    <li class="tab',itab+1,'"><a href="aMSEout_',tab,'.html">',
+            tab,'</a></li>\n',sep="",file=htmlfile, append=TRUE)
       }
     }
     cat('  </ul>\n', file=htmlfile, append=TRUE)
@@ -295,10 +301,10 @@ make_html <- function(replist=NULL,
       newcat <- "Run Details"
       cat('\n\n<h2><a name="', category, '">', newcat, '</a></h2>\n', sep="",
           file=htmlfile, append=TRUE)
-      MSE_info <- packageDescription("aMSE")
+      MSE_info <- packageDescription(packagename)
       goodnames <- c("Version", "Date", "Built",grep("Remote", names(MSE_info),
                                                      value=TRUE))
-      MSE_info_text <- '<b>aMSE info:</b><br><br>\n'
+      MSE_info_text <- paste0('<b>',packagename,' info:</b><br><br>\n')
       for(name in goodnames) {
         MSE_info_text <- c(MSE_info_text,
                            paste0(name, ": ",MSE_info[name], "<br>\n"))

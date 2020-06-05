@@ -14,7 +14,9 @@ setuphtml found in aMSE_utils}
 
 \item{category}{what HTML tab should it be added to? default="any"}
 
-\item{caption}{the caption for the figure or table, default = ""}
+\item{caption}{the caption for the figure or table, default = "",
+This should not contain commas as this confuses the csv file.
+But if you accidently put some in they will be removed.}
 }
 \value{
 nothing but it does add a line to resfile
