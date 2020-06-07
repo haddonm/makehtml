@@ -4,7 +4,7 @@
 \alias{htmltable}
 \title{htmltable generates the html to print out a table}
 \usage{
-htmltable(inmat, filename, caption)
+htmltable(inmat, filename, caption, basename)
 }
 \arguments{
 \item{inmat}{the 2D matrix or data.frame to be printed}
@@ -13,6 +13,8 @@ htmltable(inmat, filename, caption)
 makehtml}
 
 \item{caption}{the caption text placed at the top of the table}
+
+\item{basename}{the name of the csv file being tabulated.}
 }
 \value{
 nothing but it does add some html to the input filename

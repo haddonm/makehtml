@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 Generic R code for producing multi-tabbed HTML output for plotted results in a specific directory. The objective is to provide a standard method for an initial presentation of extensive results from an analysis. Rmarkdown is wondferful but sometimes one just needs to review the data and the results and so needs a convenient way of viewing tables and plots. makehtml aims to provide that method.
 
-This code is adapted and revised from code put together by Ian Taylor inside the R package __r4ss__. Essentially it creates a CSS3 file that is used by a series of HTML files, each of which represents a user defined category of results. All plots should be .png files, and all tables are derived from saved .csv files. All files, the CSS, HTML, .png and csv files are saved to a user defined directory (_resdir_), which is the main user input requirement. 
+This code is adapted and revised from code put together by Ian Taylor inside the R package __r4ss__. Essentially it creates a CSS3 file that is used by a series of HTML files, each of which represents a user defined category of results. All plots should be .png files, and all tables are derived from saved .csv files. All files, the CSS, HTML, .png and csv files are saved to a user defined directory (_resdir_), which is the main user input requirement, along with a _runlabel_. 
 
 
 ## Installation
@@ -54,8 +54,8 @@ starttime <- as.character(Sys.time())
 
 # obviously you should define your own directory
 indir <- "C:/Users/User/Dropbox/rcode2/makehtml/data-raw" 
-resdir <- filenametopath(indir,"result")
-dirExists(resdir,verbose=TRUE)
+resdir <- filenametopath(indir,"result") # pretty poor resdir name!
+dirExists(resdir,verbose=TRUE)  # this creates the directory if needed
 runlabel <- "runone"
 resfile <- setuphtml(resdir=resdir,runname=runlabel)
 # Some data
@@ -67,10 +67,11 @@ effort <- c(5879,6295,6771,8233,6830,10488,10801,9584,5961,5930,6397,
             24995,17806)
 schaef <- as.data.frame(cbind(year=1934:1955,effort=effort,catch=catch,
                 cpue=catch/effort)) # Schaefer's 1957 yellowfin data
-# First save the data
+# First save the data; obvioulsy you should use unique filenames
 filen <- filenametopath(resdir,"schaef.csv")  # csv files only
 addtable(intable=schaef,filen=filen,resfile=resfile,category="data",
          caption="Schaefer's original 1957 Yellowfin Tuna fishery data.")
+# addtable logs the filename automatically
 # sort the table on catch, just to provide two tables
 filen <- filenametopath(resdir,"sortedschaef.csv")
 sortyft <- schaef[order(schaef[,"catch"]),]
@@ -82,14 +83,15 @@ file <- paste0("Schaefer_Fisherydata_",runlabel,".png")
 filename <- filenametopath(resdir,file) 
 caption <- "The Schaefer Yellowfin tuna fishery data from 1957."
 plotprep(width=7,height=4.5,filename=filename,cex=0.9,verbose=FALSE)
-parset(plots=c(2,1))
-ymax <- getmax(schaef$cpue)
+parset(plots=c(2,1))   # read the help pages on plotprep and parset
+ymax <- getmax(schaef$cpue)  # you do not need to use base graphics
 plot(schaef$year,schaef$cpue,type="l",lwd=2,ylim=c(0,ymax),
      panel.first=grid(),xlab="",ylab="CPUE")
 ymax <- getmax(schaef$catch)
 plot(schaef$year,schaef$catch,type="l",lwd=2,ylim=c(0,ymax),
      panel.first=grid(),xlab="",ylab="Catch")
 plotoff <- dev.off()  # don't forget this!
+# currently for plots you need to log the filenames manually.
 logfilename(filename,resfile=resfile,category="Fishery",caption)
 
 # plot the catch against the effort
@@ -119,8 +121,8 @@ logfilename(filename,resfile=resfile,category="Effort",caption)
 endtime <- as.character(Sys.time())
 
 reportlist <- list(  #these 3 are minimal requirements for the replist
-  runname=runlabel,
-  starttime=starttime,endtime=endtime
+  runname=runlabel,  # though the whole of reeplist can be NULL if 
+  starttime=starttime,endtime=endtime # you are feeling lazy.
 )
 str(reportlist,max.level = 1)
 

@@ -146,10 +146,11 @@ getextension <- function(filename) {
 #' @param filename the filename to which to add the html, defined by
 #'     makehtml
 #' @param caption the caption text placed at the top of the table
+#' @param basename the name of the csv file being tabulated.
 #'
 #' @return nothing but it does add some html to the input filename
 #' @export
-htmltable <- function(inmat,filename,caption) {
+htmltable <- function(inmat,filename,caption,basename) {
   rows <- rownames(inmat)
   numrow <- length(rows)
   columns <- colnames(inmat)
@@ -158,6 +159,8 @@ htmltable <- function(inmat,filename,caption) {
   cat('<br><br> \n',file=filename,append=TRUE)
   cat('<table> \n',file=filename,append=TRUE)
   cat('<caption> ',caption,'</caption> \n',file=filename,append=TRUE)
+  cat("<br><i>file: <a href='", basename,"'>",basename,"</a></i></p>\n\n",
+      sep="",file=filename,append=TRUE)
   cat('<br> \n',file=filename,append=TRUE)
   cat('<tr> \n',file=filename,append=TRUE)
   cat(' <th>Var</th> \n',file=filename,append=TRUE)
@@ -341,7 +344,8 @@ make_html <- function(replist=NULL,
         if (plotinfo$type[i] == "table") {
           datafile <- filenametopath(resdir,plotinfo$basename[i])
           dat <- read.csv(file=datafile,header=TRUE,row.names=1)
-          htmltable(inmat=dat,filename=htmlfile,caption=plotinfo$caption[i])
+          htmltable(inmat=dat,filename=htmlfile,caption=plotinfo$caption[i],
+                    basename=plotinfo$basename[i])
         }
       }
     } # end of category if else statement
