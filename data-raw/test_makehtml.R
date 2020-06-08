@@ -26,7 +26,7 @@ addtable(intable=schaef,filen=filen,resfile=resfile,category="data",
 filen <- filenametopath(resdir,"sortedschaef.csv")
 sortyft <- schaef[order(schaef[,"catch"]),]
 addtable(intable=sortyft,filen=filen,resfile=resfile,category="data",
-         caption="The Schaefer 1957 data sorted on catch.")
+         caption="The Schaefer 1957 data sorted on catch.",big=TRUE)
 
 # plot the timeseries of cpue and catch
 file <- paste0("Schaefer_Fisherydata_",runlabel,".png")
@@ -43,6 +43,12 @@ plot(schaef$year,schaef$catch,type="l",lwd=2,ylim=c(0,ymax),
 plotoff <- dev.off()  # don't forget this!
 
 logfilename(filename,resfile=resfile,category="Fishery",caption)
+
+txt <- paste0("This is some text that I would want to insert into the ",
+              "the html to add a little interpretation to the previous ",
+              "plot and lead on the following analysis.")
+
+
 
 # plot the catch against the effort
 file <- paste0("Schaefer_CatchvEffort_",runlabel,".png")

@@ -1,6 +1,0 @@
-file,category,type,timestamp,caption,
-C:/Users/User/Dropbox/rcode2/makehtml/data-raw/result/schaef.csv,data,table,2020-06-07 14:07:53,Schaefer's original 1957 Yellowfin Tuna fishery data., 
-C:/Users/User/Dropbox/rcode2/makehtml/data-raw/result/sortedschaef.csv,data,table,2020-06-07 14:07:53,The Schaefer 1957 data sorted on catch., 
-C:/Users/User/Dropbox/rcode2/makehtml/data-raw/result/Schaefer_Fisherydata_runone.png,Fishery,plot,2020-06-07 14:07:53,The Schaefer Yellowfin tuna fishery data from 1957., 
-C:/Users/User/Dropbox/rcode2/makehtml/data-raw/result/Schaefer_CatchvEffort_runone.png,Fishery,plot,2020-06-07 14:07:53,The Schaefer Yellowfin tuna data Catch vs Effort., 
-C:/Users/User/Dropbox/rcode2/makehtml/data-raw/result/Schaefer_Effortdata_runone.png,Effort,plot,2020-06-07 14:07:54,The Schaefer Yellowfin tuna effort data from 1957., 

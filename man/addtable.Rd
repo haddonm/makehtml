@@ -4,7 +4,7 @@
 \alias{addtable}
 \title{addtable adds a table to the output}
 \usage{
-addtable(intable, filen, resfile, category = "any", caption = "")
+addtable(intable, filen, resfile, category = "any", caption = "", big = FALSE)
 }
 \arguments{
 \item{intable}{the table or data.frame to be saved and output}
@@ -17,6 +17,9 @@ setuphtml found in aMSE_utils}
 \item{category}{what HTML tab should it be added to? default="any"}
 
 \item{caption}{the caption for the figure or table, default = ""}
+
+\item{big}{if FALSE (the default) the complete table is generated, 
+if TRUE then scroll bars are added.}
 }
 \value{
 nothing but it does add a line to resfile and saves a csv 

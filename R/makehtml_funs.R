@@ -1,4 +1,45 @@
 
+
+#' @title addplot adds a plot's filename to the autoresult csv file
+#'
+#' @description addplot is used to facilitate the production of
+#'     the HTML results summary for a particular run. This depends
+#'     upon a csv file containing the names of each file to be
+#'     plotted or tabulated. addplot adds a plot's filename and the
+#'     supporting caption and category, without one needing to
+#'     remember the syntax. If no category is added explicitly then
+#'     the local webpage will have an 'any' tab containing these
+#'     unloved results.
+#'
+#' @param filen the full path and filename for the file being added
+#' @param resfile the file to be added to, which is defined by
+#'     setuphtml found in makehtml_utils
+#' @param category what HTML tab should it be added to? default="any"
+#'     obviously? you would want to change this.
+#' @param caption the caption for the figure or table, default = "",
+#'     This should not contain commas as this confuses the csv file.
+#'     But if you accidently put some in they will be removed.
+#'
+#' @return nothing but it does add a line to resfile
+#' @export
+#'
+#' @examples
+#' indir <- tempdir()
+#' resdir <- filenametopath(indir,"result")
+#' dirExists(resdir,verbose=FALSE)
+#' resfile <- setuphtml(resdir,"example_only")
+#' filename <- filenametopath(resdir,"example.png")
+#' png(filename=filename,width=7,height=4,units="in",res=300)
+#' plot(runif(100),runif(100),type="p")
+#' addplot(filen=filename,resfile=resfile,"A_category",
+#'         caption="Example Figure")  
+#' dir(resdir)
+addplot <- function(filen,resfile,category="any",caption="") {
+  if (nchar(filen) > 0) dev.off()
+  logfilename(filename=filen,resfile=resfile,category=category,
+              caption=caption)
+}
+
 #' @title addtable adds a table to the output
 #'
 #' @description addtable saves a table as a csv file into the resdir.
@@ -15,6 +56,8 @@
 #'     setuphtml found in aMSE_utils
 #' @param category what HTML tab should it be added to? default="any"
 #' @param caption the caption for the figure or table, default = ""
+#' @param big if FALSE (the default) the complete table is generated, 
+#'     if TRUE then scroll bars are added. 
 #'
 #' @return nothing but it does add a line to resfile and saves a csv 
 #'     file to resdir
@@ -32,10 +75,18 @@
 #'             caption="An example Table")
 #' dir(resdir) # examine the resfile and the example.csv files.
 #' }
-addtable <- function(intable,filen,resfile,category="any",caption="") {
+addtable <- function(intable,filen,resfile,category="any",caption="",
+                     big=FALSE) {
   write.table(intable,file = filen,sep=",")
-  logfilename(filen,resfile,category=category,caption=caption)
+  if (big) { 
+    type <- "bigtable"
+  } else {
+    type <- ""
+  }
+  logfilename(filen,resfile,category=category,caption=caption,
+              type=type)
 } # end of addtable
+
 
 #' @title dirExists: Checks for the existence of a directory
 #'
@@ -147,15 +198,17 @@ getextension <- function(filename) {
 #'     makehtml
 #' @param caption the caption text placed at the top of the table
 #' @param basename the name of the csv file being tabulated.
+#' @param big if FALSE (the default) the complete table is generated, 
+#'     if TRUE then scroll bars are added.
 #'
 #' @return nothing but it does add some html to the input filename
 #' @export
-htmltable <- function(inmat,filename,caption,basename) {
+htmltable <- function(inmat,filename,caption,basename,big=FALSE) {
   rows <- rownames(inmat)
   numrow <- length(rows)
   columns <- colnames(inmat)
   numcol <- length(columns)
-  cat('<div > \n',  file=filename,  append=TRUE)
+  if (big) cat('<div > \n',  file=filename,  append=TRUE)
   cat('<br><br> \n',file=filename,append=TRUE)
   cat('<table> \n',file=filename,append=TRUE)
   cat('<caption> ',caption,'</caption> \n',file=filename,append=TRUE)
@@ -177,8 +230,8 @@ htmltable <- function(inmat,filename,caption,basename) {
       cat(' <th>',inmat[rw,cl],'</th> \n',file=filename,append=TRUE)
     cat('</tr> \n',file=filename,append=TRUE)
   }
-  cat('</table> \n',file=filename,append=TRUE)
-  cat("</div> \n",  file=filename,  append=TRUE)
+  cat('</table> \n\n',file=filename,append=TRUE)
+  if (big) cat("</div> \n",  file=filename,  append=TRUE)
 } # end of htmltable
 
 #' @title logfilename adds a filename to the autoresult csv file
@@ -199,6 +252,8 @@ htmltable <- function(inmat,filename,caption,basename) {
 #' @param caption the caption for the figure or table, default = "",
 #'     This should not contain commas as this confuses the csv file.
 #'     But if you accidently put some in they will be removed.
+#' @param type allows one to override the plot and table options.
+#'     Currently the alternative is bigtable 
 #'
 #' @return nothing but it does add a line to resfile
 #' @export
@@ -215,8 +270,13 @@ htmltable <- function(inmat,filename,caption,basename) {
 #' logfilename(filename=filename,resfile=resfile,"A_category",
 #'             caption="Example Figure")
 #' dir(resdir)
-logfilename <- function(filename,resfile,category="any",caption="") {
-  type <- getextension(filename)
+logfilename <- function(filename,resfile,category="any",caption="",
+                        type="") {
+  if (nchar(type) == 0) {
+    type <- getextension(filename)
+  } else {
+    type <- "bigtable"
+  }
   caption <- gsub(",","",caption)  # remove commas
   cat(c(filename,category,type,as.character(Sys.time()),caption," \n"),
       file=resfile,sep=",",append=TRUE)
@@ -346,6 +406,12 @@ make_html <- function(replist=NULL,
           dat <- read.csv(file=datafile,header=TRUE,row.names=1)
           htmltable(inmat=dat,filename=htmlfile,caption=plotinfo$caption[i],
                     basename=plotinfo$basename[i])
+        }
+        if (plotinfo$type[i] == "bigtable") {
+          datafile <- filenametopath(resdir,plotinfo$basename[i])
+          dat <- read.csv(file=datafile,header=TRUE,row.names=1)
+          htmltable(inmat=dat,filename=htmlfile,caption=plotinfo$caption[i],
+                    basename=plotinfo$basename[i],big=TRUE)
         }
       }
     } # end of category if else statement
@@ -512,9 +578,9 @@ write_css <- function(resdir) {
       '    } \n',
       '    div { \n',
       '       padding: 0px;\n ',
-      '      border-collapse: collapse; \n ',
-      '       height: 350px;\n ',
-      '       width: 90%;\n ',      
+      '       border-collapse: collapse; \n ',
+      '       height: 700px;\n ',
+      '       width: 95%;\n ',      
       '       overflow-x: scroll;\n ',
       '       overflow-y: scroll;\n ',
       '    }',
