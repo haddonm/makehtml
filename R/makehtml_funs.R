@@ -505,7 +505,8 @@ setuphtml <- function(resdir, runname) {  # resdir=resdir; runname=runname
 #'
 #' @param resdir the directory within the run directory that contains
 #'     all the plot results
-#'    #  was in 466       '      border: 1px solid #ddd; ', 
+#'     
+#' @export  
 #' @return nothing but it does generate a .css file in the resdir
 write_css <- function(resdir) {
   filename <- filenametopath(resdir,"aMSEout.css")
@@ -609,6 +610,7 @@ write_css <- function(resdir) {
 #' @param htmlfile the particular html file being worked on. This is
 #'     defined within the make_html function.
 #'
+#' @export
 #' @return nothing but it does add the <head> tag to each html file
 write_head <- function(htmlfile) {
   cat('<!DOCTYPE html> \n',
