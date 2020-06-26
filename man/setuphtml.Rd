@@ -4,12 +4,16 @@
 \alias{setuphtml}
 \title{setuphtml initiates csv files lsiting results to be included}
 \usage{
-setuphtml(resdir, runname)
+setuphtml(resdir, runname, cleanslate = TRUE)
 }
 \arguments{
 \item{resdir}{full path to the directory to contain the plots}
 
 \item{runname}{the name of the particular run being summarized.}
+
+\item{cleanslate}{should the directory be emptied of results files first? 
+Only files listed in resultTable_runname.csv are deleted. This means 
+any data files put into the resdir will remain. default=TRUE}
 }
 \value{
 full path to the resfile. creating the file in resdir

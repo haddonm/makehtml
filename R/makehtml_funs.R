@@ -180,8 +180,9 @@ getextension <- function(filename) {
   type <- ""
   if (exten == "png") type <- "plot"
   if (exten == "csv") type <- "table"
+  if (exten == "txt") type <- "txtobj"
   if (nchar(type) == 0)
-    stop("A file added to results must be either 'png' or 'csv'")
+    stop("A file added to results must be 'png', 'csv', or 'txt'")
   return(type)
 } # end of getextension
 
@@ -413,6 +414,13 @@ make_html <- function(replist=NULL,
           htmltable(inmat=dat,filename=htmlfile,caption=plotinfo$caption[i],
                     basename=plotinfo$basename[i],big=TRUE)
         }
+        if (plotinfo$type[i] == "txtobj") {
+          datafile <- filenametopath(resdir,plotinfo$basename[i])
+          dat <- read.csv(file=datafile,header=TRUE,row.names=1)
+          htmltable(inmat=dat,filename=htmlfile,caption=plotinfo$caption[i],
+                    basename=plotinfo$basename[i],big=TRUE)
+        }
+        
       }
     } # end of category if else statement
     
@@ -478,6 +486,9 @@ pathtype <- function(inpath) {
 #'
 #' @param resdir full path to the directory to contain the plots
 #' @param runname the name of the particular run being summarized.
+#' @param cleanslate should the directory be emptied of results files first? 
+#'     Only files listed in resultTable_runname.csv are deleted. This means 
+#'     any data files put into the resdir will remain. default=TRUE
 #'
 #' @return full path to the resfile. creating the file in resdir
 #' @export
@@ -488,9 +499,28 @@ pathtype <- function(inpath) {
 #' dirExists(resdir,verbose=FALSE)
 #' resfile <- setuphtml(resdir,"example_only")
 #' dir(resdir)
-setuphtml <- function(resdir, runname) {  # resdir=resdir; runname=runname
-  resfile <- filenametopath(resdir,paste0("resultTable_",
-                                          runname,".csv"))
+setuphtml <- function(resdir,runname,cleanslate=TRUE) {  
+  # resdir="./../../rcode2/aMSEUse/out/testrun"; runname="testrun";cleanslate=TRUE
+  rfile <- paste0("resultTable_",runname,".csv")
+  resfile <- filenametopath(resdir,rfile) 
+  if (file.exists(resfile) & (cleanslate)) {
+    webfiles <- read.csv(resfile,header=TRUE)
+    files <- webfiles[,"file"]
+    nfile <- length(files)
+    if ((nfile > 0)) {
+      for (i in 1:nfile) file.remove(files[i])
+    }
+    category <- unique(webfiles[,"category"])
+    ncat <- length(category)
+    if (ncat > 0) {
+      for (i in 1:ncat) {
+        filen <- filenametopath(resdir,paste0("aMSEout_",category[i],".html"))
+        file.remove(filen)
+      }
+      file.remove(filenametopath(resdir,"aMSEout.html"))
+      file.remove(filenametopath(resdir,"aMSEout.css"))
+    }
+  }
   label <- c("file","category","type","timestamp","caption")
   cat(label,"\n",file = resfile,sep=",",append=FALSE)
   return(resfile)
@@ -512,7 +542,7 @@ write_css <- function(resdir) {
   filename <- filenametopath(resdir,"aMSEout.css")
   cat('    \n',
       '    body {\n',
-      '      font-size:  18px; \n',
+      '      font-size:  15px; \n',
       '      font-family: Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serif;\n',
       '      background-color: #fff;\n',
       '      margin: 50px;\n',

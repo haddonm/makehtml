@@ -4,3 +4,4 @@
 
 * 0.0.1.950 exported _write_css_ and _write_head_, so they can be imported into other packages.
 
+* 0.0.1.900 modified setuphtml so that only the files listed in the resultTable file and the HTML and CSS files are deleted if cleanslate=TRUE. In this way any data files and other files stored in resdir remain safe.
