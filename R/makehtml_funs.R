@@ -506,10 +506,10 @@ pathtype <- function(inpath) {
 #'
 #' @param resdir full path to the directory to contain the plots
 #' @param runname the name of the particular run being summarized.
-#' @param cleanslate should the directory be emptied of results files first? 
-#'     Only files listed in resultTable_runname.csv are deleted. This means 
-#'     any data files put into the resdir will remain. default=TRUE
-#' @param analysis a prefix name for all result files, default='aMSE'
+#' @param cleanslate should the directory be emptied of all files first? 
+#'     All files in the directory will be deleted. default=TRUE
+#' @param analysis a prefix name for all result files, and the local website, 
+#'     default='aMSE'
 #'
 #' @return full path to the resfile. creating the file in resdir
 #' @export
@@ -522,28 +522,16 @@ pathtype <- function(inpath) {
 #' dir(resdir)
 setuphtml <- function(resdir,runname,cleanslate=TRUE,analysis="aMSE") {  
   # resdir="./../../rcode2/aMSEUse/out/testrun"; runname="testrun";cleanslate=TRUE
-  resfile <- filenametopath(resdir,"resultTable.csv") 
-  if (file.exists(resfile) & (cleanslate)) {
-    webfiles <- read.csv(resfile,header=TRUE)
-    files <- webfiles[,"file"]
-    nfile <- length(files)
-    if (nfile > 0) for (i in 1:nfile) file.remove(files[i])
-    category <- unique(webfiles[,"category"])
-    ncat <- length(category)
-    if (ncat > 0) {
-      for (i in 1:ncat) {
-        filen <- filenametopath(resdir,paste0(analysis,"_",category[i],".html"))
-        file.remove(filen)
-      }
-      file.remove(filenametopath(resdir,paste0(analysis,".html")))
-      file.remove(filenametopath(resdir,paste0(analysis,".css")))
-    }
+  if (cleanslate) {
+    allfiles <- dir(resdir)
+    nf <- length(allfiles)
+    if (nf > 0) for (i in 1:nf) file.remove(filenametopath(resdir,allfiles[i]))
   }
+  resfile <- filenametopath(resdir,"resultTable.csv") 
   label <- c("file","category","type","timestamp","caption")
   cat(label,"\n",file = resfile,sep=",",append=FALSE)
   return(resfile)
 } # end of setuphtml
-
 
 #' @title write_css generates a CSS file used by all html files
 #'

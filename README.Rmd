@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 Generic R code for producing multi-tabbed HTML output for plotted results in a specific directory. The objective is to provide a standard method for an initial presentation of extensive results from an analysis. Rmarkdown is wondferful but sometimes one just needs to review the data and the results and so needs a convenient way of viewing tables and plots. makehtml aims to provide that method.
 
-This code is adapted and revised from code put together by Ian Taylor inside the R package __r4ss__. Essentially it creates a CSS3 file that is used by a series of HTML files, each of which represents a user defined category of results. All plots should be .png files, and all tables are derived from saved .csv files. All files, the CSS, HTML, .png and csv files are saved to a user defined directory (_resdir_), which is the main user input requirement, along with a _runlabel_. 
+This code is adapted and revised from code put together by Ian Taylor inside the R package __r4ss__. Essentially it creates a CSS3 file that is used by a series of HTML files, each of which represents a user defined category of results. All plots should be .png files, and all tables are derived from saved .csv files. All files, the CSS, HTML, .png and csv files are saved to a user defined directory (_resdir_), which is the main user input requirement, along with a _runlabel_. One can now provide a name for the webpages rather than use the default, which, for my convenience is set to 'aMSE', and this can be done in the _setuphtml_ function by changing the value of the _analysis_ argument.
 
 
 ## Installation
@@ -82,7 +82,7 @@ addtable(intable=sortyft,filen=filen,resfile=resfile,category="data",
          caption="The Schaefer 1957 data sorted on catch.")
 
 # plot the timeseries of cpue and catch,  only png files
-filename <- makefilename("Schaefer_Fisherydata",runlabel,resdir)
+filename <- plotfilename("Schaefer_Fisherydata",runlabel,resdir)
 plotprep(width=7,height=4.5,filename=filename,cex=0.9,verbose=FALSE)
 parset(plots=c(2,1))
 ymax <- getmax(schaef$cpue)
@@ -95,7 +95,7 @@ caption <- "The Schaefer Yellowfin tuna fishery data from 1957."
 addplot(filen=filename,resfile=resfile,category="Fishery",caption=caption)  
 
 # plot the catch against the effort
-filename <- makefilename("Schaefer_CatchvEffort",runlabel,resdir)
+filename <- plotfilename("Schaefer_CatchvEffort",runlabel,resdir)
 caption <- "The Schaefer Yellowfin tuna data Catch vs Effort."
 plotprep(width=7,height=3,filename=filename,cex=0.9,verbose=FALSE)
 ymax <- getmax(schaef$catch)
@@ -104,7 +104,7 @@ plot(schaef$effort,schaef$catch,type="p",pch=16,cex=1.2,ylim=c(0,ymax),
 addplot(filen=filename,resfile=resfile,category="Fishery",caption=caption)  
 
 # plot the effort data
-filename <- makefilename("Schaefer_Effortdata",runlabel,resdir)
+filename <- plotfilename("Schaefer_Effortdata",runlabel,resdir)
 caption <- "The Schaefer Yellowfin tuna effort data from 1957."
 plotprep(width=7,height=4.5,newdev=FALSE,filename=filename,cex=0.9,
          verbose=FALSE)

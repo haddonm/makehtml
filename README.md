@@ -20,7 +20,10 @@ is used by a series of HTML files, each of which represents a user
 defined category of results. All plots should be .png files, and all
 tables are derived from saved .csv files. All files, the CSS, HTML, .png
 and csv files are saved to a user defined directory (*resdir*), which is
-the main user input requirement.
+the main user input requirement, along with a *runlabel*. One can now
+provide a name for the webpages rather than use the default, which, for
+my convenience is set to ‘aMSE’, and this can be done in the *setuphtml*
+function by changing the value of the *analysis* argument.
 
 ## Installation
 
@@ -28,13 +31,14 @@ You can install the development version from
 [GitHub](https://github.com/haddonm/aMSE) with:
 
 ``` r
-if (!require(devtools)){install.packages("devtools")} 
-
-devtools::install_github("https://github.com/haddonm/makehtml")
-
-you will also need rutilsMH
-
-devtools::install_github("https://github.com/haddonm/rutilsMH")
+# If you do not have the required packages installed unhash this block and run it
+# if (!require(devtools)){install.packages("devtools")} 
+# 
+# devtools::install_github("https://github.com/haddonm/makehtml")
+# 
+# you will also need rutilsMH
+# 
+# devtools::install_github("https://github.com/haddonm/rutilsMH")
 ```
 
 Alternatively, you can generate a branch that you can work on by cloning
@@ -64,7 +68,9 @@ resdir <- filenametopath(indir,"result")
 dirExists(resdir,verbose=TRUE)
 #> C:/Users/User/Dropbox/rcode2/makehtml/data-raw/result :  exists
 runlabel <- "runone"
-resfile <- setuphtml(resdir=resdir,runname=runlabel)
+analysis <- "Schaefer"
+resfile <- setuphtml(resdir=resdir,runname=runlabel,analysis=analysis)
+
 # Some data
 catch <- c(60913,72294,78353,91522,78288,110417,114590,76841,41965,
            50058,64094,89194,129701,160134,200340,192458,224810,183685,
@@ -74,10 +80,11 @@ effort <- c(5879,6295,6771,8233,6830,10488,10801,9584,5961,5930,6397,
             24995,17806)
 schaef <- as.data.frame(cbind(year=1934:1955,effort=effort,catch=catch,
                 cpue=catch/effort)) # Schaefer's 1957 yellowfin data
-# First save the data
+# First save the data; obvioulsy you should use unique filenames
 filen <- filenametopath(resdir,"schaef.csv")  # csv files only
 addtable(intable=schaef,filen=filen,resfile=resfile,category="data",
          caption="Schaefer's original 1957 Yellowfin Tuna fishery data.")
+# addtable logs the filename automatically
 # sort the table on catch, just to provide two tables
 filen <- filenametopath(resdir,"sortedschaef.csv")
 sortyft <- schaef[order(schaef[,"catch"]),]
@@ -85,9 +92,7 @@ addtable(intable=sortyft,filen=filen,resfile=resfile,category="data",
          caption="The Schaefer 1957 data sorted on catch.")
 
 # plot the timeseries of cpue and catch,  only png files
-file <- paste0("Schaefer_Fisherydata_",runlabel,".png")
-filename <- filenametopath(resdir,file) 
-caption <- "The Schaefer Yellowfin tuna fishery data from 1957."
+filename <- plotfilename("Schaefer_Fisherydata",runlabel,resdir)
 plotprep(width=7,height=4.5,filename=filename,cex=0.9,verbose=FALSE)
 parset(plots=c(2,1))
 ymax <- getmax(schaef$cpue)
@@ -96,44 +101,39 @@ plot(schaef$year,schaef$cpue,type="l",lwd=2,ylim=c(0,ymax),
 ymax <- getmax(schaef$catch)
 plot(schaef$year,schaef$catch,type="l",lwd=2,ylim=c(0,ymax),
      panel.first=grid(),xlab="",ylab="Catch")
-plotoff <- dev.off()  # don't forget this!
-logfilename(filename,resfile=resfile,category="Fishery",caption)
+caption <- "The Schaefer Yellowfin tuna fishery data from 1957."
+addplot(filen=filename,resfile=resfile,category="Fishery",caption=caption)  
 
 # plot the catch against the effort
-file <- paste0("Schaefer_CatchvEffort_",runlabel,".png")
-filename <- filenametopath(resdir,file) 
+filename <- plotfilename("Schaefer_CatchvEffort",runlabel,resdir)
 caption <- "The Schaefer Yellowfin tuna data Catch vs Effort."
 plotprep(width=7,height=3,filename=filename,cex=0.9,verbose=FALSE)
 ymax <- getmax(schaef$catch)
 plot(schaef$effort,schaef$catch,type="p",pch=16,cex=1.2,ylim=c(0,ymax),
      panel.first=grid(),xlab="Effort",ylab="Catch")
-plotoff <- dev.off()
-logfilename(filename,resfile=resfile,category="Fishery",caption)
+addplot(filen=filename,resfile=resfile,category="Fishery",caption=caption)  
 
 # plot the effort data
-file <- paste0("Schaefer_Effortdata_",runlabel,".png")
-filename <- filenametopath(resdir,file)  #  filename=""
+filename <- plotfilename("Schaefer_Effortdata",runlabel,resdir)
+caption <- "The Schaefer Yellowfin tuna effort data from 1957."
 plotprep(width=7,height=4.5,newdev=FALSE,filename=filename,cex=0.9,
          verbose=FALSE)
 ymax <- getmax(schaef$effort)
 plot(schaef$year,schaef$effort,type="l",lwd=2,ylim=c(0,ymax),
      panel.first=grid(),xlab="",ylab="Effort Class 4 clipper days '000s")
-plotoff <- dev.off()
-
-caption <- "The Schaefer Yellowfin tuna effort data from 1957."
-logfilename(filename,resfile=resfile,category="Effort",caption)
+addplot(filen=filename,resfile=resfile,category="Effort",caption=caption)  
 
 endtime <- as.character(Sys.time())
 
 reportlist <- list(  #these 3 are minimal requirements for the replist
-  runname=runlabel,
-  starttime=starttime,endtime=endtime
+  runname=runlabel,  # though the whole of reeplist can be NULL if 
+  starttime=starttime,endtime=endtime # you are feeling lazy.
 )
 str(reportlist,max.level = 1)
 #> List of 3
 #>  $ runname  : chr "runone"
-#>  $ starttime: chr "2020-06-05 13:10:53"
-#>  $ endtime  : chr "2020-06-05 13:10:54"
+#>  $ starttime: chr "2020-08-17 14:50:06"
+#>  $ endtime  : chr "2020-08-17 14:50:06"
 
 runnotes <- "This is merely to illustrate how to use the package."
 # If you unhash the make_html component it will open the local 

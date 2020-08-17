@@ -11,11 +11,11 @@ setuphtml(resdir, runname, cleanslate = TRUE, analysis = "aMSE")
 
 \item{runname}{the name of the particular run being summarized.}
 
-\item{cleanslate}{should the directory be emptied of results files first? 
-Only files listed in resultTable_runname.csv are deleted. This means 
-any data files put into the resdir will remain. default=TRUE}
+\item{cleanslate}{should the directory be emptied of all files first? 
+All files in the directory will be deleted. default=TRUE}
 
-\item{analysis}{a prefix name for all result files, default='aMSE'}
+\item{analysis}{a prefix name for all result files, and the local website, 
+default='aMSE'}
 }
 \value{
 full path to the resfile. creating the file in resdir
