@@ -28,13 +28,14 @@ This code is adapted and revised from code put together by Ian Taylor inside the
 You can install the development version from [GitHub](https://github.com/haddonm/aMSE) with:
 
 ```{r echo=TRUE, eval=FALSE}
-if (!require(devtools)){install.packages("devtools")} 
-
-devtools::install_github("https://github.com/haddonm/makehtml")
-
-you will also need rutilsMH
-
-devtools::install_github("https://github.com/haddonm/rutilsMH")
+# If you do not have the required packages installed unhash this block and run it
+# if (!require(devtools)){install.packages("devtools")} 
+# 
+# devtools::install_github("https://github.com/haddonm/makehtml")
+# 
+# you will also need rutilsMH
+# 
+# devtools::install_github("https://github.com/haddonm/rutilsMH")
 
 ```
 
@@ -54,10 +55,12 @@ starttime <- as.character(Sys.time())
 
 # obviously you should define your own directory
 indir <- "C:/Users/User/Dropbox/rcode2/makehtml/data-raw" 
-resdir <- filenametopath(indir,"result") # pretty poor resdir name!
-dirExists(resdir,verbose=TRUE)  # this creates the directory if needed
+resdir <- filenametopath(indir,"result")
+dirExists(resdir,verbose=TRUE)
 runlabel <- "runone"
-resfile <- setuphtml(resdir=resdir,runname=runlabel)
+analysis <- "Schaefer"
+resfile <- setuphtml(resdir=resdir,runname=runlabel,analysis=analysis)
+
 # Some data
 catch <- c(60913,72294,78353,91522,78288,110417,114590,76841,41965,
            50058,64094,89194,129701,160134,200340,192458,224810,183685,
@@ -79,44 +82,36 @@ addtable(intable=sortyft,filen=filen,resfile=resfile,category="data",
          caption="The Schaefer 1957 data sorted on catch.")
 
 # plot the timeseries of cpue and catch,  only png files
-file <- paste0("Schaefer_Fisherydata_",runlabel,".png")
-filename <- filenametopath(resdir,file) 
-caption <- "The Schaefer Yellowfin tuna fishery data from 1957."
+filename <- makefilename("Schaefer_Fisherydata",runlabel,resdir)
 plotprep(width=7,height=4.5,filename=filename,cex=0.9,verbose=FALSE)
-parset(plots=c(2,1))   # read the help pages on plotprep and parset
-ymax <- getmax(schaef$cpue)  # you do not need to use base graphics
+parset(plots=c(2,1))
+ymax <- getmax(schaef$cpue)
 plot(schaef$year,schaef$cpue,type="l",lwd=2,ylim=c(0,ymax),
      panel.first=grid(),xlab="",ylab="CPUE")
 ymax <- getmax(schaef$catch)
 plot(schaef$year,schaef$catch,type="l",lwd=2,ylim=c(0,ymax),
      panel.first=grid(),xlab="",ylab="Catch")
-plotoff <- dev.off()  # don't forget this!
-# currently for plots you need to log the filenames manually.
-logfilename(filename,resfile=resfile,category="Fishery",caption)
+caption <- "The Schaefer Yellowfin tuna fishery data from 1957."
+addplot(filen=filename,resfile=resfile,category="Fishery",caption=caption)  
 
 # plot the catch against the effort
-file <- paste0("Schaefer_CatchvEffort_",runlabel,".png")
-filename <- filenametopath(resdir,file) 
+filename <- makefilename("Schaefer_CatchvEffort",runlabel,resdir)
 caption <- "The Schaefer Yellowfin tuna data Catch vs Effort."
 plotprep(width=7,height=3,filename=filename,cex=0.9,verbose=FALSE)
 ymax <- getmax(schaef$catch)
 plot(schaef$effort,schaef$catch,type="p",pch=16,cex=1.2,ylim=c(0,ymax),
      panel.first=grid(),xlab="Effort",ylab="Catch")
-plotoff <- dev.off()
-logfilename(filename,resfile=resfile,category="Fishery",caption)
+addplot(filen=filename,resfile=resfile,category="Fishery",caption=caption)  
 
 # plot the effort data
-file <- paste0("Schaefer_Effortdata_",runlabel,".png")
-filename <- filenametopath(resdir,file)  #  filename=""
+filename <- makefilename("Schaefer_Effortdata",runlabel,resdir)
+caption <- "The Schaefer Yellowfin tuna effort data from 1957."
 plotprep(width=7,height=4.5,newdev=FALSE,filename=filename,cex=0.9,
          verbose=FALSE)
 ymax <- getmax(schaef$effort)
 plot(schaef$year,schaef$effort,type="l",lwd=2,ylim=c(0,ymax),
      panel.first=grid(),xlab="",ylab="Effort Class 4 clipper days '000s")
-plotoff <- dev.off()
-
-caption <- "The Schaefer Yellowfin tuna effort data from 1957."
-logfilename(filename,resfile=resfile,category="Effort",caption)
+addplot(filen=filename,resfile=resfile,category="Effort",caption=caption)  
 
 endtime <- as.character(Sys.time())
 

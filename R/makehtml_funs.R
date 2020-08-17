@@ -283,6 +283,24 @@ logfilename <- function(filename,resfile,category="any",caption="",
       file=resfile,sep=",",append=TRUE)
 }
 
+#' @title plotfilename simplifies the production of a 
+#'
+#' @param plotname name of plot as character string
+#' @param runlabel name of particular run as character string
+#' @param resdir the results directory as character string
+#'
+#' @return a filename to be included into resultTable.csv
+#' @export
+#'
+#' @examples
+#' resdir <- tempdir()
+#' plotfilename("Schaefer_FisheryPlot","runone",resdir)
+plotfilename <- function(plotname,runlabel,resdir) {
+  file <- paste0(plotname,"_",runlabel,".png")
+  filename <- filenametopath(resdir,file) 
+  return(filename)
+} # simplify generation of filename
+
 #' @title make_html create HTML files to view results in a browser.
 #'
 #' @description make_html writes a set of HTML files with tabbed
@@ -306,6 +324,7 @@ logfilename <- function(filename,resfile,category="any",caption="",
 #' @param verbose Display more info while running this function?
 #' @param packagename name of the main package being used in the 
 #'     analysis. default='aMSE'
+#' @param analysis first name of the html files generated, default='aMSE'
 #'     
 #' @author Originally Ian Taylor, modified by Malcolm Haddon
 #'
@@ -316,14 +335,15 @@ make_html <- function(replist=NULL,
                       openfile=TRUE,
                       runnotes=NULL,
                       verbose=TRUE,
-                      packagename="aMSE") {
+                      packagename="aMSE",
+                      analysis="aMSE") {
   # replist=reportlist;resdir=resdir;width=500;openfile=TRUE;runnotes=runnotes;verbose=TRUE
   # Clarify data
   if(is.null(resdir)) stop("input 'resdir' required \n")
-  write_css(resdir)
+  write_css(resdir,analysis)
   filenames <- dir(resdir)
   filetable <- filenames[grep("resultTable",filenames)]
-  if(length(filetable)==0) stop("No resultTable, what went wrong? \n")
+  if(length(filetable)==0) stop("No resultTable, something went wrong? \n")
   filename <- filenametopath(resdir,filetable)
   tablefile <- read.csv(filename,colClasses = "character")
   if(!is.data.frame(tablefile))
@@ -336,26 +356,26 @@ make_html <- function(replist=NULL,
   for (icat in 0:length(categories)) { # icat=1
     if(icat==0){
       category <- "Home"
-      htmlfile <- paste0(resdir,"/aMSEout.html")
+      htmlfile <- paste0(resdir,"/",analysis,".html")
       htmlhome <- htmlfile
       if(verbose) cat("Home HTML file with output will be:\n",htmlhome,'\n')
     }  else{
       category <- categories[icat]
-      htmlfile <- paste0(resdir,"/aMSEout_",category,".html")
+      htmlfile <- paste0(resdir,"/",analysis,"_",category,".html")
       if(verbose) cat("tab HTML file with output will be:\n",htmlfile,'\n')
     }
-    write_head(htmlfile)
+    write_head(htmlfile,analysis)
     cat('<body> \n',file=htmlfile, append=TRUE)
     cat('<!-- Site navigation menu -->\n',
         '  <ul id="tabnav">\n',file=htmlfile, append=TRUE)
     for(itab in 0:length(categories)){
       if(itab==0){
         tab <- "Home"
-        cat('    <li class="tab1"><a href="aMSEout.html">Home</a></li>\n',sep="",
-            file=htmlfile, append=TRUE)
+        cat('    <li class="tab1"><a href="',paste0(analysis,".html"),
+            '">Home</a></li>\n',sep="", file=htmlfile, append=TRUE)
       }else{
         tab <- categories[itab]
-        cat('    <li class="tab',itab+1,'"><a href="aMSEout_',tab,'.html">',
+        cat('    <li class="tab',itab+1,'"><a href="',analysis,'_',tab,'.html">',
             tab,'</a></li>\n',sep="",file=htmlfile, append=TRUE)
       }
     }
@@ -489,6 +509,7 @@ pathtype <- function(inpath) {
 #' @param cleanslate should the directory be emptied of results files first? 
 #'     Only files listed in resultTable_runname.csv are deleted. This means 
 #'     any data files put into the resdir will remain. default=TRUE
+#' @param analysis a prefix name for all result files, default='aMSE'
 #'
 #' @return full path to the resfile. creating the file in resdir
 #' @export
@@ -499,32 +520,30 @@ pathtype <- function(inpath) {
 #' dirExists(resdir,verbose=FALSE)
 #' resfile <- setuphtml(resdir,"example_only")
 #' dir(resdir)
-setuphtml <- function(resdir,runname,cleanslate=TRUE) {  
+setuphtml <- function(resdir,runname,cleanslate=TRUE,analysis="aMSE") {  
   # resdir="./../../rcode2/aMSEUse/out/testrun"; runname="testrun";cleanslate=TRUE
-  rfile <- paste0("resultTable_",runname,".csv")
-  resfile <- filenametopath(resdir,rfile) 
+  resfile <- filenametopath(resdir,"resultTable.csv") 
   if (file.exists(resfile) & (cleanslate)) {
     webfiles <- read.csv(resfile,header=TRUE)
     files <- webfiles[,"file"]
     nfile <- length(files)
-    if ((nfile > 0)) {
-      for (i in 1:nfile) file.remove(files[i])
-    }
+    if (nfile > 0) for (i in 1:nfile) file.remove(files[i])
     category <- unique(webfiles[,"category"])
     ncat <- length(category)
     if (ncat > 0) {
       for (i in 1:ncat) {
-        filen <- filenametopath(resdir,paste0("aMSEout_",category[i],".html"))
+        filen <- filenametopath(resdir,paste0(analysis,"_",category[i],".html"))
         file.remove(filen)
       }
-      file.remove(filenametopath(resdir,"aMSEout.html"))
-      file.remove(filenametopath(resdir,"aMSEout.css"))
+      file.remove(filenametopath(resdir,paste0(analysis,".html")))
+      file.remove(filenametopath(resdir,paste0(analysis,".css")))
     }
   }
   label <- c("file","category","type","timestamp","caption")
   cat(label,"\n",file = resfile,sep=",",append=FALSE)
   return(resfile)
 } # end of setuphtml
+
 
 #' @title write_css generates a CSS file used by all html files
 #'
@@ -535,11 +554,12 @@ setuphtml <- function(resdir,runname,cleanslate=TRUE) {
 #'
 #' @param resdir the directory within the run directory that contains
 #'     all the plot results
+#' @param analysis name of the css files generated; input to make_html
 #'     
 #' @export  
 #' @return nothing but it does generate a .css file in the resdir
-write_css <- function(resdir) {
-  filename <- filenametopath(resdir,"aMSEout.css")
+write_css <- function(resdir,analysis) {
+  filename <- filenametopath(resdir,paste0(analysis,".css"))
   cat('    \n',
       '    body {\n',
       '      font-size:  15px; \n',
@@ -639,21 +659,22 @@ write_css <- function(resdir) {
 #'
 #' @param htmlfile the particular html file being worked on. This is
 #'     defined within the make_html function.
+#' @param analysis name of the css files generated; input to make_html     
 #'
 #' @export
 #' @return nothing but it does add the <head> tag to each html file
-write_head <- function(htmlfile) {
+write_head <- function(htmlfile,analysis) {
   cat('<!DOCTYPE html> \n',
       '<html> \n',
       '  <head>',
       '    <meta charset="utf-8"> \n',
       '    <meta name="format-detection" content="telephone=no"/> \n',
-      '    <title>', 'aMSEout', '</title>\n',
+      '    <title>', analysis, '</title>\n',
       '    <!-- source for text below is http://unraveled.com/publications/css_tabs/ -->\n',
       '    <!-- CSS Tabs is licensed under Creative Commons Attribution 3.0 - http://creativecommons.org/licenses/by/3.0/ -->\n',
       '    <!-- When visiting unraveled.com/publications/css_tabs it appeared to be a toxic website - BE CAREFUL -->\n',
       '    \n',
-      '    <link href="aMSEout.css" rel="stylesheet" type="text/css"> \n',
+      '    <link href=',paste0(analysis,".css"),' rel="stylesheet" type="text/css"> \n',
       '    \n',
       '  </head>\n',
       sep = "", file=htmlfile, append=FALSE)

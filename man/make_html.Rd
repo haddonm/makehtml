@@ -11,7 +11,8 @@ make_html(
   openfile = TRUE,
   runnotes = NULL,
   verbose = TRUE,
-  packagename = "aMSE"
+  packagename = "aMSE",
+  analysis = "aMSE"
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ held.}
 
 \item{packagename}{name of the main package being used in the 
 analysis. default='aMSE'}
+
+\item{analysis}{first name of the html files generated, default='aMSE'}
 }
 \description{
 make_html writes a set of HTML files with tabbed

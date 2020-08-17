@@ -8,7 +8,8 @@ indir <- "C:/Users/User/Dropbox/rcode2/makehtml/data-raw"
 resdir <- filenametopath(indir,"result")
 dirExists(resdir,verbose=TRUE)
 runlabel <- "runone"
-resfile <- setuphtml(resdir=resdir,runname=runlabel)
+analysis <- "Schaefer"
+resfile <- setuphtml(resdir=resdir,runname=runlabel,analysis=analysis)
 
 catch <- c(60913,72294,78353,91522,78288,110417,114590,76841,41965,
            50058,64094,89194,129701,160134,200340,192458,224810,183685,
@@ -29,8 +30,8 @@ addtable(intable=sortyft,filen=filen,resfile=resfile,category="data",
          caption="The Schaefer 1957 data sorted on catch.",big=TRUE)
 
 # plot the timeseries of cpue and catch
-file <- paste0("Schaefer_Fisherydata_",runlabel,".png")
-filename <- filenametopath(resdir,file) 
+filename <- makefilename("Schaefer_Fisherydata",runlabel,resdir)
+#filename=""
 caption <- "The Schaefer Yellowfin tuna fishery data from 1957."
 plotprep(width=7,height=4.5,filename=filename,cex=0.9,verbose=FALSE)
 parset(plots=c(2,1))
@@ -40,41 +41,33 @@ plot(schaef$year,schaef$cpue,type="l",lwd=2,ylim=c(0,ymax),
 ymax <- getmax(schaef$catch)
 plot(schaef$year,schaef$catch,type="l",lwd=2,ylim=c(0,ymax),
      panel.first=grid(),xlab="",ylab="Catch")
-plotoff <- dev.off()  # don't forget this!
-
-logfilename(filename,resfile=resfile,category="Fishery",caption)
+addplot(filen=filename,resfile=resfile,"Fishery",caption=caption)  
 
 txt <- paste0("This is some text that I would want to insert into the ",
               "the html to add a little interpretation to the previous ",
               "plot and lead on the following analysis.")
 
-
-
 # plot the catch against the effort
-file <- paste0("Schaefer_CatchvEffort_",runlabel,".png")
-filename <- filenametopath(resdir,file) 
+filename <- makefilename("Schaefer_CatchvEffort",runlabel,resdir)
+#filename=""
 caption <- "The Schaefer Yellowfin tuna data Catch vs Effort."
 plotprep(width=7,height=3,filename=filename,cex=0.9,verbose=FALSE)
 ymax <- getmax(schaef$catch)
 plot(schaef$effort,schaef$catch,type="p",pch=16,cex=1.2,ylim=c(0,ymax),
      panel.first=grid(),xlab="Effort",ylab="Catch")
-plotoff <- dev.off()
-logfilename(filename,resfile=resfile,category="Fishery",caption)
+addplot(filen=filename,resfile=resfile,"Fishery",caption=caption)  
 
 
 #effort data
-file <- paste0("Schaefer_Effortdata_",runlabel,".png")
-filename <- filenametopath(resdir,file)  #  filename=""
+filename <- makefilename("Schaefer_Effortdata",runlabel,resdir)
+#filename=""
+caption <- "The Schaefer Yellowfin tuna effort data from 1957."
 plotprep(width=7,height=4.5,newdev=FALSE,filename=filename,cex=0.9,
          verbose=FALSE)
 ymax <- getmax(schaef$effort)
 plot(schaef$year,schaef$effort,type="l",lwd=2,ylim=c(0,ymax),
      panel.first=grid(),xlab="",ylab="Effort Class 4 clipper days '000s")
-plotoff <- dev.off()
-
-caption <- "The Schaefer Yellowfin tuna effort data from 1957."
-logfilename(filename,resfile=resfile,category="Effort",caption)
-
+addplot(filen=filename,resfile=resfile,"Effort",caption=caption)  
 
 
 endtime <- as.character(Sys.time())
@@ -90,7 +83,18 @@ runnotes <- "This is merely to illustrate how to use the package."
 
 #  source(filenametopath(sourcedir,"sourcer.R"))
 make_html(replist=reportlist,resdir=resdir,width=500,openfile=TRUE,
-          runnotes=runnotes,verbose=FALSE,packagename="makehtml")
+          runnotes=runnotes,verbose=FALSE,packagename="makehtml",
+          analysis=analysis)
+
+
+
+
+# plot the timeseries of cpue and catch
+
+
+
+
+
 
 
 
