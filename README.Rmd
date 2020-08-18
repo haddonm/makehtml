@@ -13,6 +13,11 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Latest Changes
+
+Read the news.md for the latest changes to the codebase.
+
+
 # makehtml
 
 <!-- badges: start -->
@@ -28,12 +33,12 @@ This code is adapted and revised from code put together by Ian Taylor inside the
 You can install the development version from [GitHub](https://github.com/haddonm/aMSE) with:
 
 ```{r echo=TRUE, eval=FALSE}
-# If you do not have the required packages installed unhash this block and run it
+# # If you do not have the required packages installed unhash the code in this block and run it
 # if (!require(devtools)){install.packages("devtools")} 
 # 
 # devtools::install_github("https://github.com/haddonm/makehtml")
 # 
-# you will also need rutilsMH
+# # you will also need rutilsMH
 # 
 # devtools::install_github("https://github.com/haddonm/rutilsMH")
 
@@ -103,7 +108,8 @@ plot(schaef$effort,schaef$catch,type="p",pch=16,cex=1.2,ylim=c(0,ymax),
      panel.first=grid(),xlab="Effort",ylab="Catch")
 addplot(filen=filename,resfile=resfile,category="Fishery",caption=caption)  
 
-# plot the effort data
+# plot the effort data; if filename="" no png file is produced or added, but a
+# new plot is certainly generated. Once as you want it, then use plotfilename.
 filename <- plotfilename("Schaefer_Effortdata",runlabel,resdir)
 caption <- "The Schaefer Yellowfin tuna effort data from 1957."
 plotprep(width=7,height=4.5,newdev=FALSE,filename=filename,cex=0.9,

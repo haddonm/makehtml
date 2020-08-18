@@ -4,15 +4,14 @@
 \alias{addtable}
 \title{addtable adds a table to the output}
 \usage{
-addtable(intable, filen, resfile, category = "any", caption = "", big = FALSE)
+addtable(intable, filen, resdir, category = "any", caption = "", big = FALSE)
 }
 \arguments{
 \item{intable}{the table or data.frame to be saved and output}
 
-\item{filen}{the full path and filename being given to the table}
+\item{filen}{the filename being given to the table}
 
-\item{resfile}{the file to be added to, which is defined by
-setuphtml found in aMSE_utils}
+\item{resdir}{full path to the directory to contain the results}
 
 \item{category}{what HTML tab should it be added to? default="any"}
 
@@ -42,7 +41,7 @@ dirExists(resdir,verbose=FALSE)
 resfile <- setuphtml(resdir,"example_only")
 filen <- "example.csv"
 egtable <- matrix(rnorm(25,0,1),nrow=5,ncol=5)
-addtable(egtable,filen=filen,resfile=resfile,"A_category",
+addtable(egtable,filen=filen,resdir=resdir,"A_category",
             caption="An example Table")
 dir(resdir) # examine the resfile and the example.csv files.
 }

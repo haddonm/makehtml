@@ -7,7 +7,7 @@
 setuphtml(resdir, runname, cleanslate = TRUE, analysis = "aMSE")
 }
 \arguments{
-\item{resdir}{full path to the directory to contain the plots}
+\item{resdir}{full path to the directory to contain the results}
 
 \item{runname}{the name of the particular run being summarized.}
 

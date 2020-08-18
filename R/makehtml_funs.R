@@ -11,14 +11,13 @@
 #'     the local webpage will have an 'any' tab containing these
 #'     unloved results.
 #'
-#' @param filen the full path and filename for the file being added
-#' @param resfile the file to be added to, which is defined by
-#'     setuphtml found in makehtml_utils
+#' @param filen the filename for the file being added (no path needed)
+#' @param resdir full path to the directory to contain the results
 #' @param category what HTML tab should it be added to? default="any"
 #'     obviously? you would want to change this.
 #' @param caption the caption for the figure or table, default = "",
 #'     This should not contain commas as this confuses the csv file.
-#'     But if you accidently put some in they will be removed.
+#'     But if you accidentally put some in they will be removed.
 #'
 #' @return nothing but it does add a line to resfile
 #' @export
@@ -31,11 +30,13 @@
 #' filename <- filenametopath(resdir,"example.png")
 #' png(filename=filename,width=7,height=4,units="in",res=300)
 #' plot(runif(100),runif(100),type="p")
-#' addplot(filen=filename,resfile=resfile,"A_category",
+#' addplot(filen=filename,resdir=resdir,"A_category",
 #'         caption="Example Figure")  
 #' dir(resdir)
-addplot <- function(filen,resfile,category="any",caption="") {
+addplot <- function(filen,resdir,category="any",caption="") {
   if (nchar(filen) > 0) dev.off()
+  if (nchar(filen) < nchar(resdir)) filen <- filenametopath(resdir,filen)
+  resfile <- filenametopath(resdir,"resultTable.csv")
   logfilename(filename=filen,resfile=resfile,category=category,
               caption=caption)
 }
@@ -51,9 +52,8 @@ addplot <- function(filen,resfile,category="any",caption="") {
 #'     containing these unloved results.
 #'
 #' @param intable the table or data.frame to be saved and output
-#' @param filen the full path and filename being given to the table
-#' @param resfile the file to be added to, which is defined by
-#'     setuphtml found in aMSE_utils
+#' @param filen the filename being given to the table
+#' @param resdir full path to the directory to contain the results
 #' @param category what HTML tab should it be added to? default="any"
 #' @param caption the caption for the figure or table, default = ""
 #' @param big if FALSE (the default) the complete table is generated, 
@@ -71,20 +71,20 @@ addplot <- function(filen,resfile,category="any",caption="") {
 #' resfile <- setuphtml(resdir,"example_only")
 #' filen <- "example.csv"
 #' egtable <- matrix(rnorm(25,0,1),nrow=5,ncol=5)
-#' addtable(egtable,filen=filen,resfile=resfile,"A_category",
+#' addtable(egtable,filen=filen,resdir=resdir,"A_category",
 #'             caption="An example Table")
 #' dir(resdir) # examine the resfile and the example.csv files.
 #' }
-addtable <- function(intable,filen,resfile,category="any",caption="",
-                     big=FALSE) {
+addtable <- function(intable,filen,resdir,category="any",caption="",big=FALSE) {
+  if (nchar(filen) < nchar(resdir)) filen <- filenametopath(resdir,filen)
   write.table(intable,file = filen,sep=",")
   if (big) { 
     type <- "bigtable"
   } else {
     type <- ""
   }
-  logfilename(filen,resfile,category=category,caption=caption,
-              type=type)
+  resfile <- filenametopath(resdir,"resultTable.csv")
+  logfilename(filen,resfile,category=category,caption=caption,type=type)
 } # end of addtable
 
 
@@ -504,7 +504,7 @@ pathtype <- function(inpath) {
 #'     timestamp. Then, each plot and table is included with an entry
 #'     for each column.
 #'
-#' @param resdir full path to the directory to contain the plots
+#' @param resdir full path to the directory to contain the results
 #' @param runname the name of the particular run being summarized.
 #' @param cleanslate should the directory be emptied of all files first? 
 #'     All files in the directory will be deleted. default=TRUE
