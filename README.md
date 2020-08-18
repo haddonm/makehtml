@@ -1,6 +1,10 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+# Latest Changes
+
+Read the news.md for the latest changes to the codebase.
+
 # makehtml
 
 <!-- badges: start -->
@@ -31,12 +35,12 @@ You can install the development version from
 [GitHub](https://github.com/haddonm/aMSE) with:
 
 ``` r
-# If you do not have the required packages installed unhash this block and run it
+# # If you do not have the required packages installed unhash the code in this block and run it
 # if (!require(devtools)){install.packages("devtools")} 
 # 
 # devtools::install_github("https://github.com/haddonm/makehtml")
 # 
-# you will also need rutilsMH
+# # you will also need rutilsMH
 # 
 # devtools::install_github("https://github.com/haddonm/rutilsMH")
 ```
@@ -113,7 +117,8 @@ plot(schaef$effort,schaef$catch,type="p",pch=16,cex=1.2,ylim=c(0,ymax),
      panel.first=grid(),xlab="Effort",ylab="Catch")
 addplot(filen=filename,resfile=resfile,category="Fishery",caption=caption)  
 
-# plot the effort data
+# plot the effort data; if filename="" no png file is produced or added, but a
+# new plot is certainly generated. Once as you want it, then use plotfilename.
 filename <- plotfilename("Schaefer_Effortdata",runlabel,resdir)
 caption <- "The Schaefer Yellowfin tuna effort data from 1957."
 plotprep(width=7,height=4.5,newdev=FALSE,filename=filename,cex=0.9,
@@ -132,8 +137,8 @@ reportlist <- list(  #these 3 are minimal requirements for the replist
 str(reportlist,max.level = 1)
 #> List of 3
 #>  $ runname  : chr "runone"
-#>  $ starttime: chr "2020-08-17 14:50:06"
-#>  $ endtime  : chr "2020-08-17 14:50:06"
+#>  $ starttime: chr "2020-08-17 14:57:03"
+#>  $ endtime  : chr "2020-08-17 14:57:04"
 
 runnotes <- "This is merely to illustrate how to use the package."
 # If you unhash the make_html component it will open the local 

@@ -2,29 +2,27 @@
 % Please edit documentation in R/makehtml_funs.R
 \name{setuphtml}
 \alias{setuphtml}
-\title{setuphtml initiates csv files lsiting results to be included}
+\title{setuphtml initiates csv files listing results to be included}
 \usage{
-setuphtml(resdir, runname, cleanslate = TRUE, analysis = "aMSE")
+setuphtml(resdir, cleanslate = FALSE)
 }
 \arguments{
-\item{resdir}{full path to the directory to contain the plots}
-
-\item{runname}{the name of the particular run being summarized.}
+\item{resdir}{full path to the directory to contain the results}
 
 \item{cleanslate}{should the directory be emptied of all files first? 
-All files in the directory will be deleted. default=TRUE}
-
-\item{analysis}{a prefix name for all result files, and the local website, 
-default='aMSE'}
+All files in the directory will be deleted. default=FALSE. This is 
+obviously a very powerful and potentially dangerous argument, hence 
+it needs to be set =TRUE explicitly}
 }
 \value{
-full path to the resfile. creating the file in resdir
+invisibly, the full path to the resfile, after creating the file in 
+    resdir and potentially deleting all previous files contained in resdir
 }
 \description{
-setuphtml initiates the csv file used to contain the
-    filenames, captions, and categories of the plots and tables to
-    be included in the html results. The format of the csv file
-    is to have column names of file, caption, category, and
+setuphtml always initiates the resultTable.csv file used to 
+    contain the filenames, captions, and categories of the plots and 
+    tables to be included in the html results. The format of the csv 
+    file is to have column names of file, caption, category, and
     timestamp. Then, each plot and table is included with an entry
     for each column.
 }
@@ -32,6 +30,6 @@ setuphtml initiates the csv file used to contain the
 indir <- tempdir()
 resdir <- filenametopath(indir,"results")
 dirExists(resdir,verbose=FALSE)
-resfile <- setuphtml(resdir,"example_only")
+resfile <- setuphtml(resdir)
 dir(resdir)
 }

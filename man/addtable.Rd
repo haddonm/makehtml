@@ -4,15 +4,14 @@
 \alias{addtable}
 \title{addtable adds a table to the output}
 \usage{
-addtable(intable, filen, resfile, category = "any", caption = "", big = FALSE)
+addtable(intable, filen, resdir, category = "any", caption = "", big = FALSE)
 }
 \arguments{
 \item{intable}{the table or data.frame to be saved and output}
 
-\item{filen}{the full path and filename being given to the table}
+\item{filen}{only the filename being given to the table, no path included}
 
-\item{resfile}{the file to be added to, which is defined by
-setuphtml found in aMSE_utils}
+\item{resdir}{full path to the directory to contain the results}
 
 \item{category}{what HTML tab should it be added to? default="any"}
 
@@ -22,13 +21,14 @@ setuphtml found in aMSE_utils}
 if TRUE then scroll bars are added.}
 }
 \value{
-nothing but it does add a line to resfile and saves a csv 
+nothing but it does add a line to resultTable.csv and saves a csv 
     file to resdir
 }
 \description{
-addtable saves a table as a csv file into the resdir.
-    Then it logs the filename in the the csv file containing the 
-    names of each file to be plotted or tabulated. This function 
+If the filen remains empty, then addtable does nothing.
+    Otherwise, addtable saves a table as a csv file into the resdir.
+    Then it logs the filename in the the resultTable.csv file containing 
+    the  names of each file to be plotted or tabulated. This function 
     saves having to combined the filename with the resdir, and then
     does the filename logging for you. If no category is added 
     explicitly then the local webpage will have an 'any' tab 
@@ -42,7 +42,7 @@ dirExists(resdir,verbose=FALSE)
 resfile <- setuphtml(resdir,"example_only")
 filen <- "example.csv"
 egtable <- matrix(rnorm(25,0,1),nrow=5,ncol=5)
-addtable(egtable,filen=filen,resfile=resfile,"A_category",
+addtable(egtable,filen=filen,resdir=resdir,"A_category",
             caption="An example Table")
 dir(resdir) # examine the resfile and the example.csv files.
 }

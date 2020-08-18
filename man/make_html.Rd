@@ -12,7 +12,7 @@ make_html(
   runnotes = NULL,
   verbose = TRUE,
   packagename = "aMSE",
-  analysis = "aMSE"
+  htmlname = "aMSE"
 )
 }
 \arguments{
@@ -20,7 +20,7 @@ make_html(
 
 \item{resdir}{Directory where a particular run's files, including 
 any results, as tables and plots, and any other files, are all 
-held.}
+held. Cannot be NULL.}
 
 \item{width}{Width of plots (in pixels). Default = 500}
 
@@ -31,9 +31,9 @@ held.}
 \item{verbose}{Display more info while running this function?}
 
 \item{packagename}{name of the main package being used in the 
-analysis. default='aMSE'}
+analysis. default='aMSE'. This is described on the home page}
 
-\item{analysis}{first name of the html files generated, default='aMSE'}
+\item{htmlname}{first name of the html files generated, default='aMSE'}
 }
 \description{
 make_html writes a set of HTML files with tabbed
@@ -42,9 +42,8 @@ make_html writes a set of HTML files with tabbed
     This code was borrowed from Ian Taylor's r4ss, but has been
     extensively modified to improve both the css (see write_css)
     and the HTML. By default, this function will look in the
-    results directory where PNG files were created for a
-    resultTable_runname.csv file with the name 'runname' written
-    added by aMSE. HTML files are written to link to these plots
+    results directory where PNG and CSV files were created for a
+    resultTable.csv file. HTML files are written to link to these plots
     and put in the same directory.
 }
 \author{

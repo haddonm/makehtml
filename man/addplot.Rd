@@ -4,43 +4,40 @@
 \alias{addplot}
 \title{addplot adds a plot's filename to the autoresult csv file}
 \usage{
-addplot(filen, resfile, category = "any", caption = "")
+addplot(filen, resdir, category = "any", caption = "")
 }
 \arguments{
-\item{filen}{the full path and filename for the file being added}
+\item{filen}{full path and filename for file being added}
 
-\item{resfile}{the file to be added to, which is defined by
-setuphtml found in makehtml_utils}
+\item{resdir}{full path to the directory to contain the results}
 
 \item{category}{what HTML tab should it be added to? default="any"
 obviously? you would want to change this.}
 
 \item{caption}{the caption for the figure or table, default = "",
 This should not contain commas as this confuses the csv file.
-But if you accidently put some in they will be removed.}
+But if you accidentally put some in they will be removed.}
 }
 \value{
 nothing but it does add a line to resfile
 }
 \description{
 addplot is used to facilitate the production of
-    the HTML results summary for a particular run. This depends
-    upon a csv file containing the names of each file to be
-    plotted or tabulated. addplot adds a plot's filename and the
-    supporting caption and category, without one needing to
-    remember the syntax. If no category is added explicitly then
-    the local webpage will have an 'any' tab containing these
-    unloved results.
+    the HTML results summary for a particular run. If the filen remains 
+    empty, then addplot does nothing. However, if filen is longer than "",
+    then addplot adds the plot's filename and the supporting caption and 
+    category to resultTable.csv that lists all files to be included in 
+    the local website. If no category is added explicitly then the local 
+    webpage will have an 'any' tab containing these unloved results.
 }
 \examples{
 indir <- tempdir()
 resdir <- filenametopath(indir,"result")
 dirExists(resdir,verbose=FALSE)
-resfile <- setuphtml(resdir,"example_only")
-filename <- filenametopath(resdir,"example.png")
+resfile <- setuphtml(resdir=resdir)
+filename <- "example.png" # must be a png file
 png(filename=filename,width=7,height=4,units="in",res=300)
 plot(runif(100),runif(100),type="p")
-addplot(filen=filename,resfile=resfile,"A_category",
-        caption="Example Figure")  
+addplot(filen=filename,resdir=resdir,"A_category",caption="Example Figure")  
 dir(resdir)
 }

@@ -3,22 +3,20 @@
 #' @title addplot adds a plot's filename to the autoresult csv file
 #'
 #' @description addplot is used to facilitate the production of
-#'     the HTML results summary for a particular run. This depends
-#'     upon a csv file containing the names of each file to be
-#'     plotted or tabulated. addplot adds a plot's filename and the
-#'     supporting caption and category, without one needing to
-#'     remember the syntax. If no category is added explicitly then
-#'     the local webpage will have an 'any' tab containing these
-#'     unloved results.
+#'     the HTML results summary for a particular run. If the filen remains 
+#'     empty, then addplot does nothing. However, if filen is longer than "",
+#'     then addplot adds the plot's filename and the supporting caption and 
+#'     category to resultTable.csv that lists all files to be included in 
+#'     the local website. If no category is added explicitly then the local 
+#'     webpage will have an 'any' tab containing these unloved results. 
 #'
-#' @param filen the full path and filename for the file being added
-#' @param resfile the file to be added to, which is defined by
-#'     setuphtml found in makehtml_utils
+#' @param filen full path and filename for file being added
+#' @param resdir full path to the directory to contain the results
 #' @param category what HTML tab should it be added to? default="any"
 #'     obviously? you would want to change this.
 #' @param caption the caption for the figure or table, default = "",
 #'     This should not contain commas as this confuses the csv file.
-#'     But if you accidently put some in they will be removed.
+#'     But if you accidentally put some in they will be removed.
 #'
 #' @return nothing but it does add a line to resfile
 #' @export
@@ -27,39 +25,41 @@
 #' indir <- tempdir()
 #' resdir <- filenametopath(indir,"result")
 #' dirExists(resdir,verbose=FALSE)
-#' resfile <- setuphtml(resdir,"example_only")
-#' filename <- filenametopath(resdir,"example.png")
+#' resfile <- setuphtml(resdir=resdir)
+#' filename <- "example.png" # must be a png file
 #' png(filename=filename,width=7,height=4,units="in",res=300)
 #' plot(runif(100),runif(100),type="p")
-#' addplot(filen=filename,resfile=resfile,"A_category",
-#'         caption="Example Figure")  
+#' addplot(filen=filename,resdir=resdir,"A_category",caption="Example Figure")  
 #' dir(resdir)
-addplot <- function(filen,resfile,category="any",caption="") {
-  if (nchar(filen) > 0) dev.off()
-  logfilename(filename=filen,resfile=resfile,category=category,
-              caption=caption)
+addplot <- function(filen,resdir,category="any",caption="") {
+  if (nchar(filen) > 0) {
+    dev.off()
+    resfile <- filenametopath(resdir,"resultTable.csv")
+    logfilename(filename=filen,resfile=resfile,category=category,
+                caption=caption)
+  }
 }
 
 #' @title addtable adds a table to the output
 #'
-#' @description addtable saves a table as a csv file into the resdir.
-#'     Then it logs the filename in the the csv file containing the 
-#'     names of each file to be plotted or tabulated. This function 
+#' @description If the filen remains empty, then addtable does nothing.
+#'     Otherwise, addtable saves a table as a csv file into the resdir.
+#'     Then it logs the filename in the the resultTable.csv file containing 
+#'     the  names of each file to be plotted or tabulated. This function 
 #'     saves having to combined the filename with the resdir, and then
 #'     does the filename logging for you. If no category is added 
 #'     explicitly then the local webpage will have an 'any' tab 
 #'     containing these unloved results.
 #'
 #' @param intable the table or data.frame to be saved and output
-#' @param filen the full path and filename being given to the table
-#' @param resfile the file to be added to, which is defined by
-#'     setuphtml found in aMSE_utils
+#' @param filen only the filename being given to the table, no path included
+#' @param resdir full path to the directory to contain the results
 #' @param category what HTML tab should it be added to? default="any"
 #' @param caption the caption for the figure or table, default = ""
 #' @param big if FALSE (the default) the complete table is generated, 
 #'     if TRUE then scroll bars are added. 
 #'
-#' @return nothing but it does add a line to resfile and saves a csv 
+#' @return nothing but it does add a line to resultTable.csv and saves a csv 
 #'     file to resdir
 #' @export
 #'
@@ -71,22 +71,23 @@ addplot <- function(filen,resfile,category="any",caption="") {
 #' resfile <- setuphtml(resdir,"example_only")
 #' filen <- "example.csv"
 #' egtable <- matrix(rnorm(25,0,1),nrow=5,ncol=5)
-#' addtable(egtable,filen=filen,resfile=resfile,"A_category",
+#' addtable(egtable,filen=filen,resdir=resdir,"A_category",
 #'             caption="An example Table")
 #' dir(resdir) # examine the resfile and the example.csv files.
 #' }
-addtable <- function(intable,filen,resfile,category="any",caption="",
-                     big=FALSE) {
-  write.table(intable,file = filen,sep=",")
-  if (big) { 
-    type <- "bigtable"
-  } else {
-    type <- ""
+addtable <- function(intable,filen,resdir,category="any",caption="",big=FALSE) {
+  if (nchar(filen) > 0) {
+     filen <- filenametopath(resdir,filen)
+     write.table(intable,file = filen,sep=",")
+     if (big) { 
+       type <- "bigtable"
+     } else {
+       type <- ""
+     }
+     resfile <- filenametopath(resdir,"resultTable.csv")
+     logfilename(filen,resfile,category=category,caption=caption,type=type)
   }
-  logfilename(filen,resfile,category=category,caption=caption,
-              type=type)
 } # end of addtable
-
 
 #' @title dirExists: Checks for the existence of a directory
 #'
@@ -309,22 +310,21 @@ plotfilename <- function(plotname,runlabel,resdir) {
 #'     This code was borrowed from Ian Taylor's r4ss, but has been
 #'     extensively modified to improve both the css (see write_css)
 #'     and the HTML. By default, this function will look in the
-#'     results directory where PNG files were created for a
-#'     resultTable_runname.csv file with the name 'runname' written
-#'     added by aMSE. HTML files are written to link to these plots
+#'     results directory where PNG and CSV files were created for a
+#'     resultTable.csv file. HTML files are written to link to these plots
 #'     and put in the same directory.
 #'
 #' @param replist Object created by a run, can be NULL
 #' @param resdir Directory where a particular run's files, including 
 #'     any results, as tables and plots, and any other files, are all 
-#'     held.
+#'     held. Cannot be NULL.
 #' @param width Width of plots (in pixels). Default = 500
 #' @param openfile Automatically open index.html in default browser?
 #' @param runnotes Add additional notes to home page.
 #' @param verbose Display more info while running this function?
 #' @param packagename name of the main package being used in the 
-#'     analysis. default='aMSE'
-#' @param analysis first name of the html files generated, default='aMSE'
+#'     analysis. default='aMSE'. This is described on the home page
+#' @param htmlname first name of the html files generated, default='aMSE'
 #'     
 #' @author Originally Ian Taylor, modified by Malcolm Haddon
 #'
@@ -336,11 +336,11 @@ make_html <- function(replist=NULL,
                       runnotes=NULL,
                       verbose=TRUE,
                       packagename="aMSE",
-                      analysis="aMSE") {
+                      htmlname="aMSE") {
   # replist=reportlist;resdir=resdir;width=500;openfile=TRUE;runnotes=runnotes;verbose=TRUE
   # Clarify data
   if(is.null(resdir)) stop("input 'resdir' required \n")
-  write_css(resdir,analysis)
+  write_css(resdir,htmlname)
   filenames <- dir(resdir)
   filetable <- filenames[grep("resultTable",filenames)]
   if(length(filetable)==0) stop("No resultTable, something went wrong? \n")
@@ -356,26 +356,26 @@ make_html <- function(replist=NULL,
   for (icat in 0:length(categories)) { # icat=1
     if(icat==0){
       category <- "Home"
-      htmlfile <- paste0(resdir,"/",analysis,".html")
+      htmlfile <- paste0(resdir,"/",htmlname,".html")
       htmlhome <- htmlfile
       if(verbose) cat("Home HTML file with output will be:\n",htmlhome,'\n')
     }  else{
       category <- categories[icat]
-      htmlfile <- paste0(resdir,"/",analysis,"_",category,".html")
+      htmlfile <- paste0(resdir,"/",htmlname,"_",category,".html")
       if(verbose) cat("tab HTML file with output will be:\n",htmlfile,'\n')
     }
-    write_head(htmlfile,analysis)
+    write_head(htmlfile,htmlname)
     cat('<body> \n',file=htmlfile, append=TRUE)
     cat('<!-- Site navigation menu -->\n',
         '  <ul id="tabnav">\n',file=htmlfile, append=TRUE)
     for(itab in 0:length(categories)){
       if(itab==0){
         tab <- "Home"
-        cat('    <li class="tab1"><a href="',paste0(analysis,".html"),
+        cat('    <li class="tab1"><a href="',paste0(htmlname,".html"),
             '">Home</a></li>\n',sep="", file=htmlfile, append=TRUE)
       }else{
         tab <- categories[itab]
-        cat('    <li class="tab',itab+1,'"><a href="',analysis,'_',tab,'.html">',
+        cat('    <li class="tab',itab+1,'"><a href="',htmlname,'_',tab,'.html">',
             tab,'</a></li>\n',sep="",file=htmlfile, append=TRUE)
       }
     }
@@ -394,7 +394,6 @@ make_html <- function(replist=NULL,
                            paste0(name, ": ",MSE_info[name], "<br>\n"))
       }
       cat('\n\n<p>',MSE_info_text,'</p>\n',
-          '<p><b>Name of Run: </b>',replist$runname,'</p>\n',
           '<p><b>Directory: </b>',resdir,'</p>\n',
           '<p><b>Starting time of model: </b>',
           replist$starttime,'</p>\n',
@@ -495,33 +494,33 @@ pathtype <- function(inpath) {
   return(typepath)
 } # end of pathtype
 
-#' @title setuphtml initiates csv files lsiting results to be included
+#' @title setuphtml initiates csv files listing results to be included
 #'
-#' @description setuphtml initiates the csv file used to contain the
-#'     filenames, captions, and categories of the plots and tables to
-#'     be included in the html results. The format of the csv file
-#'     is to have column names of file, caption, category, and
+#' @description setuphtml always initiates the resultTable.csv file used to 
+#'     contain the filenames, captions, and categories of the plots and 
+#'     tables to be included in the html results. The format of the csv 
+#'     file is to have column names of file, caption, category, and
 #'     timestamp. Then, each plot and table is included with an entry
 #'     for each column.
 #'
-#' @param resdir full path to the directory to contain the plots
-#' @param runname the name of the particular run being summarized.
+#' @param resdir full path to the directory to contain the results
 #' @param cleanslate should the directory be emptied of all files first? 
-#'     All files in the directory will be deleted. default=TRUE
-#' @param analysis a prefix name for all result files, and the local website, 
-#'     default='aMSE'
+#'     All files in the directory will be deleted. default=FALSE. This is 
+#'     obviously a very powerful and potentially dangerous argument, hence 
+#'     it needs to be set =TRUE explicitly
 #'
-#' @return full path to the resfile. creating the file in resdir
+#' @return invisibly, the full path to the resfile, after creating the file in 
+#'     resdir and potentially deleting all previous files contained in resdir
 #' @export
 #'
 #' @examples
 #' indir <- tempdir()
 #' resdir <- filenametopath(indir,"results")
 #' dirExists(resdir,verbose=FALSE)
-#' resfile <- setuphtml(resdir,"example_only")
+#' resfile <- setuphtml(resdir)
 #' dir(resdir)
-setuphtml <- function(resdir,runname,cleanslate=TRUE,analysis="aMSE") {  
-  # resdir="./../../rcode2/aMSEUse/out/testrun"; runname="testrun";cleanslate=TRUE
+setuphtml <- function(resdir,cleanslate=FALSE) {  
+  # resdir="./../../rcode2/aMSEUse/out/testrun"; cleanslate=TRUE
   if (cleanslate) {
     allfiles <- dir(resdir)
     nf <- length(allfiles)
@@ -530,7 +529,7 @@ setuphtml <- function(resdir,runname,cleanslate=TRUE,analysis="aMSE") {
   resfile <- filenametopath(resdir,"resultTable.csv") 
   label <- c("file","category","type","timestamp","caption")
   cat(label,"\n",file = resfile,sep=",",append=FALSE)
-  return(resfile)
+  return(invisible(resfile))
 } # end of setuphtml
 
 #' @title write_css generates a CSS file used by all html files
@@ -542,12 +541,12 @@ setuphtml <- function(resdir,runname,cleanslate=TRUE,analysis="aMSE") {
 #'
 #' @param resdir the directory within the run directory that contains
 #'     all the plot results
-#' @param analysis name of the css files generated; input to make_html
+#' @param htmlname name of the css files generated; input to make_html
 #'     
 #' @export  
 #' @return nothing but it does generate a .css file in the resdir
-write_css <- function(resdir,analysis) {
-  filename <- filenametopath(resdir,paste0(analysis,".css"))
+write_css <- function(resdir,htmlname) {
+  filename <- filenametopath(resdir,paste0(htmlname,".css"))
   cat('    \n',
       '    body {\n',
       '      font-size:  15px; \n',
@@ -647,22 +646,22 @@ write_css <- function(resdir,analysis) {
 #'
 #' @param htmlfile the particular html file being worked on. This is
 #'     defined within the make_html function.
-#' @param analysis name of the css files generated; input to make_html     
+#' @param htmlname name of the css files generated; input to make_html     
 #'
 #' @export
 #' @return nothing but it does add the <head> tag to each html file
-write_head <- function(htmlfile,analysis) {
+write_head <- function(htmlfile,htmlname) {
   cat('<!DOCTYPE html> \n',
       '<html> \n',
       '  <head>',
       '    <meta charset="utf-8"> \n',
       '    <meta name="format-detection" content="telephone=no"/> \n',
-      '    <title>', analysis, '</title>\n',
+      '    <title>', htmlname, '</title>\n',
       '    <!-- source for text below is http://unraveled.com/publications/css_tabs/ -->\n',
       '    <!-- CSS Tabs is licensed under Creative Commons Attribution 3.0 - http://creativecommons.org/licenses/by/3.0/ -->\n',
       '    <!-- When visiting unraveled.com/publications/css_tabs it appeared to be a toxic website - BE CAREFUL -->\n',
       '    \n',
-      '    <link href=',paste0(analysis,".css"),' rel="stylesheet" type="text/css"> \n',
+      '    <link href=',paste0(htmlname,".css"),' rel="stylesheet" type="text/css"> \n',
       '    \n',
       '  </head>\n',
       sep = "", file=htmlfile, append=FALSE)

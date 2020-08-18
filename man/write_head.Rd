@@ -4,13 +4,13 @@
 \alias{write_head}
 \title{write_head adds the <head> tag to  each html file in results}
 \usage{
-write_head(htmlfile, analysis)
+write_head(htmlfile, htmlname)
 }
 \arguments{
 \item{htmlfile}{the particular html file being worked on. This is
 defined within the make_html function.}
 
-\item{analysis}{name of the css files generated; input to make_html}
+\item{htmlname}{name of the css files generated; input to make_html}
 }
 \value{
 nothing but it does add the <head> tag to each html file
