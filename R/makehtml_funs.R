@@ -128,6 +128,28 @@ dirExists <- function(indir,make=TRUE,verbose=TRUE) {
   }
 }  # end of dirExists
 
+#' @title endmakehtml write the syntax of the website generation to console
+#' 
+#' @description endmakehtml writes to the console the syntax of the final set 
+#'     of commands needed to generate the internal website of results. The idea 
+#'     is that one would then copy those lines to the end of one's own code to
+#'     complete the output of results. Its functions is simply to facilitate 
+#'     remembering the syntax.
+#'
+#' @return nothing but it does write some code syntax to the console
+#' @export
+#'
+#' @examples
+#' endmakehtml()
+endmakehtml <- function() {
+  cat('   reportlist <- list(runname=runlabel,',"\n",
+      '                    starttime=0,endtime=2',"\n",
+      '  )',"\n\n",
+      '  runnotes <- "An example."',"\n\n",
+      '  #make_html(replist=reportlist,resdir=resdir,width=500,',"\n",
+      '  #openfile=TRUE,runnotes=runnotes,verbose=FALSE)',"\n")
+} # end of endmakehtml
+
 #' @title filenametopath safely add a filename to a path
 #'
 #' @description filenametopath add a filename to a path safely, using
@@ -283,24 +305,6 @@ logfilename <- function(filename,resfile,category="any",caption="",
   cat(c(filename,category,type,as.character(Sys.time()),caption," \n"),
       file=resfile,sep=",",append=TRUE)
 }
-
-#' @title plotfilename simplifies the production of a 
-#'
-#' @param plotname name of plot as character string
-#' @param runlabel name of particular run as character string
-#' @param resdir the results directory as character string
-#'
-#' @return a filename to be included into resultTable.csv
-#' @export
-#'
-#' @examples
-#' resdir <- tempdir()
-#' plotfilename("Schaefer_FisheryPlot","runone",resdir)
-plotfilename <- function(plotname,runlabel,resdir) {
-  file <- paste0(plotname,"_",runlabel,".png")
-  filename <- filenametopath(resdir,file) 
-  return(filename)
-} # simplify generation of filename
 
 #' @title make_html create HTML files to view results in a browser.
 #'
@@ -505,9 +509,9 @@ pathtype <- function(inpath) {
 #'
 #' @param resdir full path to the directory to contain the results
 #' @param cleanslate should the directory be emptied of all files first? 
-#'     All files in the directory will be deleted. default=FALSE. This is 
-#'     obviously a very powerful and potentially dangerous argument, hence 
-#'     it needs to be set =TRUE explicitly
+#'     All html, csv, png, RData, and css files in the directory will be 
+#'     deleted. default=FALSE. This is obviously a very powerful and potentially 
+#'     dangerous argument, hence it needs to be set =TRUE explicitly.
 #'
 #' @return invisibly, the full path to the resfile, after creating the file in 
 #'     resdir and potentially deleting all previous files contained in resdir
@@ -523,8 +527,15 @@ setuphtml <- function(resdir,cleanslate=FALSE) {
   # resdir="./../../rcode2/aMSEUse/out/testrun"; cleanslate=TRUE
   if (cleanslate) {
     allfiles <- dir(resdir)
-    nf <- length(allfiles)
-    if (nf > 0) for (i in 1:nf) file.remove(filenametopath(resdir,allfiles[i]))
+    types <- c(".html",".csv",".png",".RData",".css")
+    ntype <- length(types)
+    for (j in 1:ntype) {
+      pick <- grep(types[j],allfiles)
+      nf <- length(pick)
+      if (nf > 0) 
+        for (i in 1:nf) file.remove(filenametopath(resdir,allfiles[pick[i]]))   
+      allfiles <- dir(resdir)
+    }
   }
   resfile <- filenametopath(resdir,"resultTable.csv") 
   label <- c("file","category","type","timestamp","caption")

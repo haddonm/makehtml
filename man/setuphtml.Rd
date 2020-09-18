@@ -10,9 +10,9 @@ setuphtml(resdir, cleanslate = FALSE)
 \item{resdir}{full path to the directory to contain the results}
 
 \item{cleanslate}{should the directory be emptied of all files first? 
-All files in the directory will be deleted. default=FALSE. This is 
-obviously a very powerful and potentially dangerous argument, hence 
-it needs to be set =TRUE explicitly}
+All html, csv, png, RData, and css files in the directory will be 
+deleted. default=FALSE. This is obviously a very powerful and potentially 
+dangerous argument, hence it needs to be set =TRUE explicitly.}
 }
 \value{
 invisibly, the full path to the resfile, after creating the file in 

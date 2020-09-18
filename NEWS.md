@@ -10,4 +10,7 @@
 
 * 0.0.1.800 Modified both addtable and addplot so that the input filename need not have the full path included.
 
-* 0.0.1.750 Further modificaiton to addplot, addtable, and setuphtml to simplify their use. Input filenames now must not include the path to resdir
+* 0.0.1.750 Further modification to addplot, addtable, and setuphtml to simplify their use. Input filenames now must not include the path to resdir
+
+* 0.0.1.700 makehtml added the endmakehtml function that writes out the final syntax needed
+at the end of generating a set of results into a website.
