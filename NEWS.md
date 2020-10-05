@@ -14,3 +14,5 @@
 
 * 0.0.1.700 makehtml added the endmakehtml function that writes out the final syntax needed
 at the end of generating a set of results into a website.
+
+* 0.0.1.650 altered 'setuphtml' so that 'cleanslate' does not delete .csv files, which prevents 'cleanslate' deleting the data files if resdir is also used to store a run's data. 

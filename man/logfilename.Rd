@@ -16,7 +16,7 @@ setuphtml found in aMSE_utils}
 
 \item{caption}{the caption for the figure or table, default = "",
 This should not contain commas as this confuses the csv file.
-But if you accidently put some in they will be removed.}
+But if you accidentally put some in they will be removed.}
 
 \item{type}{allows one to override the plot and table options.
 Currently the alternative is bigtable}
@@ -32,13 +32,15 @@ logfilename is used to facilitate the produciton of
     supporting caption and category, without one needing to
     remember the syntax. If no category is added explicitly then
     the local webpage will have an 'any' tab containing these
-    unloved results.
+    unloved results. logfilename would not usually be called 
+    independently of addtable or addplot but it is exported for 
+    completeness.
 }
 \examples{
 indir <- tempdir()
 resdir <- filenametopath(indir,"result")
 dirExists(resdir,verbose=FALSE)
-resfile <- setuphtml(resdir,"example_only")
+resfile <- setuphtml(resdir)
 filename <- filenametopath(resdir,"example.png")
 png(filename=filename,width=7,height=4,units="in",res=300)
 plot(runif(100),runif(100),type="p")

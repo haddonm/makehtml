@@ -267,7 +267,9 @@ htmltable <- function(inmat,filename,caption,basename,big=FALSE) {
 #'     supporting caption and category, without one needing to
 #'     remember the syntax. If no category is added explicitly then
 #'     the local webpage will have an 'any' tab containing these
-#'     unloved results.
+#'     unloved results. logfilename would not usually be called 
+#'     independently of addtable or addplot but it is exported for 
+#'     completeness.
 #'
 #' @param filename the full path and filename for the file being added
 #' @param resfile the file to be added to, which is defined by
@@ -275,7 +277,7 @@ htmltable <- function(inmat,filename,caption,basename,big=FALSE) {
 #' @param category what HTML tab should it be added to? default="any"
 #' @param caption the caption for the figure or table, default = "",
 #'     This should not contain commas as this confuses the csv file.
-#'     But if you accidently put some in they will be removed.
+#'     But if you accidentally put some in they will be removed.
 #' @param type allows one to override the plot and table options.
 #'     Currently the alternative is bigtable 
 #'
@@ -286,7 +288,7 @@ htmltable <- function(inmat,filename,caption,basename,big=FALSE) {
 #' indir <- tempdir()
 #' resdir <- filenametopath(indir,"result")
 #' dirExists(resdir,verbose=FALSE)
-#' resfile <- setuphtml(resdir,"example_only")
+#' resfile <- setuphtml(resdir)
 #' filename <- filenametopath(resdir,"example.png")
 #' png(filename=filename,width=7,height=4,units="in",res=300)
 #' plot(runif(100),runif(100),type="p")
@@ -509,9 +511,11 @@ pathtype <- function(inpath) {
 #'
 #' @param resdir full path to the directory to contain the results
 #' @param cleanslate should the directory be emptied of all files first? 
-#'     All html, csv, png, RData, and css files in the directory will be 
+#'     All html, png, RData, and css files in the directory will be 
 #'     deleted. default=FALSE. This is obviously a very powerful and potentially 
-#'     dangerous argument, hence it needs to be set =TRUE explicitly.
+#'     dangerous argument, hence it needs to be set =TRUE explicitly. It does 
+#'     not delete any .csv files so if the resdir is used to store the data for
+#'     the run then 'cleanslate' will not affect the data. 
 #'
 #' @return invisibly, the full path to the resfile, after creating the file in 
 #'     resdir and potentially deleting all previous files contained in resdir
@@ -527,7 +531,7 @@ setuphtml <- function(resdir,cleanslate=FALSE) {
   # resdir="./../../rcode2/aMSEUse/out/testrun"; cleanslate=TRUE
   if (cleanslate) {
     allfiles <- dir(resdir)
-    types <- c(".html",".csv",".png",".RData",".css")
+    types <- c(".html",".png",".RData",".css")
     ntype <- length(types)
     for (j in 1:ntype) {
       pick <- grep(types[j],allfiles)

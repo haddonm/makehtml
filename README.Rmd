@@ -132,9 +132,9 @@ runnotes <- "This is merely to illustrate how to use the package."
 # website generated inside resdir, if openfile=FALSE it will be 
 # generated but not opened.
 #
-make_html(replist=reportlist,resdir=resdir,width=500,openfile=TRUE,
-          runnotes=runnotes,verbose=FALSE,packagename="makehtml",
-          htmlname="makehtml")
+# make_html(replist=reportlist,resdir=resdir,width=500,openfile=TRUE,
+#           runnotes=runnotes,verbose=FALSE,packagename="makehtml",
+#           htmlname="makehtml")
 
 ```
 
