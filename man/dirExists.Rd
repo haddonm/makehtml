@@ -29,7 +29,9 @@ dirExists: does a directory exist? It uses dir.exists
     and reports existence if already present and uses dir.create
     it it does not exist, but avoids the warning message is one
     already exists. The option of not creating a new directory is
-    also present.
+    also present. This uses 'recursive=TRUE' inside the dir.create, so
+    one should be able to create directories as deeply downa path as
+    wished.
 }
 \examples{
 indirect <- getwd()

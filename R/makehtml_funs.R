@@ -95,7 +95,9 @@ addtable <- function(intable,filen,resdir,category="any",caption="",big=FALSE) {
 #'     and reports existence if already present and uses dir.create
 #'     it it does not exist, but avoids the warning message is one
 #'     already exists. The option of not creating a new directory is
-#'     also present.
+#'     also present. This uses 'recursive=TRUE' inside the dir.create, so
+#'     one should be able to create directories as deeply downa path as
+#'     wished. 
 #'
 #' @param indir a character string containing the name of the directory
 #'     whose existence is to be checked before it is created if it
@@ -120,7 +122,7 @@ dirExists <- function(indir,make=TRUE,verbose=TRUE) {
     if (verbose) cat(indir,":  exists  \n")
   } else {
     if (make) {
-      dir.create(indir)
+      dir.create(indir, recursive = TRUE)
       if (verbose) cat(indir,":  created  \n")
     } else {
       warning(cat(indir,":  does not exist \n"))
@@ -628,6 +630,7 @@ write_css <- function(resdir,htmlname) {
       '    }\n',
       '    .odd {\n',
       '      background-color: #cfc;\n ',
+      '      line-height: 0.8; \n ',
       '    } \n',
       '    div { \n',
       '       padding: 0px;\n ',
@@ -640,9 +643,10 @@ write_css <- function(resdir,htmlname) {
       '    table { \n',
       '      margin-left: auto;\n',
       '      margin-right: auto;\n ',
+      '      line-height: 0.8; \n ',
       '    } \n',
       '    th, td {\n',
-      '      padding: 5px; \n',
+      '      padding: 3px; \n',
       '      border: 1px solid black;\n',
       '      border-collapse: collapse; \n ',
       '    }\n',
