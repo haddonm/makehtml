@@ -11,7 +11,7 @@
 #'     webpage will have an 'any' tab containing these unloved results. 
 #'
 #' @param filen full path and filename for file being added
-#' @param resdir full path to the directory to contain the results
+#' @param rundir full path to the directory to contain the results
 #' @param category what HTML tab should it be added to? default="any"
 #'     obviously? you would want to change this.
 #' @param caption the caption for the figure or table, default = "",
@@ -23,18 +23,18 @@
 #'
 #' @examples
 #' indir <- tempdir()
-#' resdir <- filenametopath(indir,"result")
-#' dirExists(resdir,verbose=FALSE)
-#' resfile <- setuphtml(resdir=resdir)
+#' rundir <- filenametopath(indir,"result")
+#' dirExists(rundir,verbose=FALSE)
+#' resfile <- setuphtml(rundir=rundir)
 #' filename <- "example.png" # must be a png file
 #' png(filename=filename,width=7,height=4,units="in",res=300)
 #' plot(runif(100),runif(100),type="p")
-#' addplot(filen=filename,resdir=resdir,"A_category",caption="Example Figure")  
-#' dir(resdir)
-addplot <- function(filen,resdir,category="any",caption="") {
+#' addplot(filen=filename,rundir=rundir,"A_category",caption="Example Figure")  
+#' dir(rundir)
+addplot <- function(filen,rundir,category="any",caption="") {
   if (nchar(filen) > 0) {
     dev.off()
-    resfile <- filenametopath(resdir,"resultTable.csv")
+    resfile <- filenametopath(rundir,"resultTable.csv")
     logfilename(filename=filen,resfile=resfile,category=category,
                 caption=caption)
   }
@@ -43,48 +43,48 @@ addplot <- function(filen,resdir,category="any",caption="") {
 #' @title addtable adds a table to the output
 #'
 #' @description If the filen remains empty, then addtable does nothing.
-#'     Otherwise, addtable saves a table as a csv file into the resdir.
+#'     Otherwise, addtable saves a table as a csv file into the rundir.
 #'     Then it logs the filename in the the resultTable.csv file containing 
 #'     the  names of each file to be plotted or tabulated. This function 
-#'     saves having to combined the filename with the resdir, and then
+#'     saves having to combined the filename with the rundir, and then
 #'     does the filename logging for you. If no category is added 
 #'     explicitly then the local webpage will have an 'any' tab 
 #'     containing these unloved results.
 #'
 #' @param intable the table or data.frame to be saved and output
 #' @param filen only the filename being given to the table, no path included
-#' @param resdir full path to the directory to contain the results
+#' @param rundir full path to the directory to contain the results
 #' @param category what HTML tab should it be added to? default="any"
 #' @param caption the caption for the figure or table, default = ""
 #' @param big if FALSE (the default) the complete table is generated, 
 #'     if TRUE then scroll bars are added. 
 #'
 #' @return nothing but it does add a line to resultTable.csv and saves a csv 
-#'     file to resdir
+#'     file to rundir
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' indir <- tempdir()
-#' resdir <- filenametopath(indir,"result")
-#' dirExists(resdir,verbose=FALSE)
-#' resfile <- setuphtml(resdir,"example_only")
+#' rundir <- filenametopath(indir,"result")
+#' dirExists(rundir,verbose=FALSE)
+#' resfile <- setuphtml(rundir,"example_only")
 #' filen <- "example.csv"
 #' egtable <- matrix(rnorm(25,0,1),nrow=5,ncol=5)
-#' addtable(egtable,filen=filen,resdir=resdir,"A_category",
+#' addtable(egtable,filen=filen,rundir=rundir,"A_category",
 #'             caption="An example Table")
-#' dir(resdir) # examine the resfile and the example.csv files.
+#' dir(rundir) # examine the resfile and the example.csv files.
 #' }
-addtable <- function(intable,filen,resdir,category="any",caption="",big=FALSE) {
+addtable <- function(intable,filen,rundir,category="any",caption="",big=FALSE) {
   if (nchar(filen) > 0) {
-     filen <- filenametopath(resdir,filen)
+     filen <- filenametopath(rundir,filen)
      write.table(intable,file = filen,sep=",")
      if (big) { 
        type <- "bigtable"
      } else {
        type <- ""
      }
-     resfile <- filenametopath(resdir,"resultTable.csv")
+     resfile <- filenametopath(rundir,"resultTable.csv")
      logfilename(filen,resfile,category=category,caption=caption,type=type)
   }
 } # end of addtable
@@ -148,7 +148,7 @@ endmakehtml <- function() {
       '                    starttime=0,endtime=2',"\n",
       '  )',"\n\n",
       '  runnotes <- "An example."',"\n\n",
-      '  #make_html(replist=reportlist,resdir=resdir,width=500,',"\n",
+      '  #make_html(replist=reportlist,rundir=rundir,width=500,',"\n",
       '  #openfile=TRUE,runnotes=runnotes,verbose=FALSE)',"\n")
 } # end of endmakehtml
 
@@ -288,16 +288,16 @@ htmltable <- function(inmat,filename,caption,basename,big=FALSE) {
 #'
 #' @examples
 #' indir <- tempdir()
-#' resdir <- filenametopath(indir,"result")
-#' dirExists(resdir,verbose=FALSE)
-#' resfile <- setuphtml(resdir)
-#' filename <- filenametopath(resdir,"example.png")
+#' rundir <- filenametopath(indir,"result")
+#' dirExists(rundir,verbose=FALSE)
+#' resfile <- setuphtml(rundir)
+#' filename <- filenametopath(rundir,"example.png")
 #' png(filename=filename,width=7,height=4,units="in",res=300)
 #' plot(runif(100),runif(100),type="p")
 #' dev.off()  
 #' logfilename(filename=filename,resfile=resfile,"A_category",
 #'             caption="Example Figure")
-#' dir(resdir)
+#' dir(rundir)
 logfilename <- function(filename,resfile,category="any",caption="",
                         type="") {
   if (nchar(type) == 0) {
@@ -323,7 +323,7 @@ logfilename <- function(filename,resfile,category="any",caption="",
 #'     and put in the same directory.
 #'
 #' @param replist Object created by a run, can be NULL
-#' @param resdir Directory where a particular run's files, including 
+#' @param rundir Directory where a particular run's files, including 
 #'     any results, as tables and plots, and any other files, are all 
 #'     held. Cannot be NULL.
 #' @param width Width of plots (in pixels). Default = 500
@@ -338,38 +338,38 @@ logfilename <- function(filename,resfile,category="any",caption="",
 #'
 #' @export
 make_html <- function(replist=NULL,
-                      resdir=NULL,
+                      rundir=NULL,
                       width=500,
                       openfile=TRUE,
                       runnotes=NULL,
                       verbose=TRUE,
                       packagename="aMSE",
                       htmlname="aMSE") {
-  # replist=reportlist;resdir=resdir;width=500;openfile=TRUE;runnotes=runnotes;verbose=TRUE
+  # replist=reportlist;rundir=rundir;width=500;openfile=TRUE;runnotes=runnotes;verbose=TRUE
   # Clarify data
-  if(is.null(resdir)) stop("input 'resdir' required \n")
-  write_css(resdir,htmlname)
-  filenames <- dir(resdir)
+  if(is.null(rundir)) stop("input 'rundir' required \n")
+  write_css(rundir,htmlname)
+  filenames <- dir(rundir)
   filetable <- filenames[grep("resultTable",filenames)]
   if(length(filetable)==0) stop("No resultTable, something went wrong? \n")
-  filename <- filenametopath(resdir,filetable)
+  filename <- filenametopath(rundir,filetable)
   tablefile <- read.csv(filename,colClasses = "character")
   if(!is.data.frame(tablefile))
     stop("The list of files to output needs to be a data.frame \n")
   tablefile$basename <- basename(as.character(tablefile$file))
-  tablefile$dirname <- resdir
+  tablefile$dirname <- rundir
   # identify the categories and name each html file
   categories <- unique(tablefile$category)  # html tab names
   types <- tablefile$type   #  table or plot
   for (icat in 0:length(categories)) { # icat=1
     if(icat==0){
       category <- "Home"
-      htmlfile <- paste0(resdir,"/",htmlname,".html")
+      htmlfile <- paste0(rundir,"/",htmlname,".html")
       htmlhome <- htmlfile
       if(verbose) cat("Home HTML file with output will be:\n",htmlhome,'\n')
     }  else{
       category <- categories[icat]
-      htmlfile <- paste0(resdir,"/",htmlname,"_",category,".html")
+      htmlfile <- paste0(rundir,"/",htmlname,"_",category,".html")
       if(verbose) cat("tab HTML file with output will be:\n",htmlfile,'\n')
     }
     write_head(htmlfile,htmlname)
@@ -402,10 +402,10 @@ make_html <- function(replist=NULL,
                            paste0(name, ": ",MSE_info[name], "<br>\n"))
       }
       cat('\n\n<p>',MSE_info_text,'</p>\n',
-          '<p><b>Directory: </b>',resdir,'</p>\n',
+          '<p><b>Directory: </b>',rundir,'</p>\n',
           '<p><b>Starting time of model: </b>',
           replist$starttime,'</p>\n',
-          '<p><b>End time of model: </b>',
+          '<p><b>Finish time of model  : </b>',
           replist$endtime,'</p>\n\n',
           sep="",file=htmlfile, append=TRUE)
       
@@ -430,19 +430,19 @@ make_html <- function(replist=NULL,
               sep="",  file=htmlfile,  append=TRUE)
         }
         if (plotinfo$type[i] == "table") {
-          datafile <- filenametopath(resdir,plotinfo$basename[i])
+          datafile <- filenametopath(rundir,plotinfo$basename[i])
           dat <- read.csv(file=datafile,header=TRUE,row.names=1)
           htmltable(inmat=dat,filename=htmlfile,caption=plotinfo$caption[i],
                     basename=plotinfo$basename[i])
         }
         if (plotinfo$type[i] == "bigtable") {
-          datafile <- filenametopath(resdir,plotinfo$basename[i])
+          datafile <- filenametopath(rundir,plotinfo$basename[i])
           dat <- read.csv(file=datafile,header=TRUE,row.names=1)
           htmltable(inmat=dat,filename=htmlfile,caption=plotinfo$caption[i],
                     basename=plotinfo$basename[i],big=TRUE)
         }
         if (plotinfo$type[i] == "txtobj") {
-          datafile <- filenametopath(resdir,plotinfo$basename[i])
+          datafile <- filenametopath(rundir,plotinfo$basename[i])
           dat <- read.csv(file=datafile,header=TRUE,row.names=1)
           htmltable(inmat=dat,filename=htmlfile,caption=plotinfo$caption[i],
                     basename=plotinfo$basename[i],big=TRUE)
@@ -511,39 +511,39 @@ pathtype <- function(inpath) {
 #'     timestamp. Then, each plot and table is included with an entry
 #'     for each column.
 #'
-#' @param resdir full path to the directory to contain the results
+#' @param rundir full path to the directory to contain the results
 #' @param cleanslate should the directory be emptied of all files first? 
 #'     All html, png, RData, and css files in the directory will be 
 #'     deleted. default=FALSE. This is obviously a very powerful and potentially 
 #'     dangerous argument, hence it needs to be set =TRUE explicitly. It does 
-#'     not delete any .csv files so if the resdir is used to store the data for
+#'     not delete any .csv files so if the rundir is used to store the data for
 #'     the run then 'cleanslate' will not affect the data. 
 #'
 #' @return invisibly, the full path to the resfile, after creating the file in 
-#'     resdir and potentially deleting all previous files contained in resdir
+#'     rundir and potentially deleting all previous files contained in rundir
 #' @export
 #'
 #' @examples
 #' indir <- tempdir()
-#' resdir <- filenametopath(indir,"results")
-#' dirExists(resdir,verbose=FALSE)
-#' resfile <- setuphtml(resdir)
-#' dir(resdir)
-setuphtml <- function(resdir,cleanslate=FALSE) {  
-  # resdir="./../../rcode2/aMSEUse/out/testrun"; cleanslate=TRUE
+#' rundir <- filenametopath(indir,"results")
+#' dirExists(rundir,verbose=FALSE)
+#' resfile <- setuphtml(rundir)
+#' dir(rundir)
+setuphtml <- function(rundir,cleanslate=FALSE) {  
+  # rundir="./../../rcode2/aMSEUse/out/testrun"; cleanslate=TRUE
   if (cleanslate) {
-    allfiles <- dir(resdir)
+    allfiles <- dir(rundir)
     types <- c(".html",".png",".RData",".css")
     ntype <- length(types)
     for (j in 1:ntype) {
       pick <- grep(types[j],allfiles)
       nf <- length(pick)
       if (nf > 0) 
-        for (i in 1:nf) file.remove(filenametopath(resdir,allfiles[pick[i]]))   
-      allfiles <- dir(resdir)
+        for (i in 1:nf) file.remove(filenametopath(rundir,allfiles[pick[i]]))   
+      allfiles <- dir(rundir)
     }
   }
-  resfile <- filenametopath(resdir,"resultTable.csv") 
+  resfile <- filenametopath(rundir,"resultTable.csv") 
   label <- c("file","category","type","timestamp","caption")
   cat(label,"\n",file = resfile,sep=",",append=FALSE)
   return(invisible(resfile))
@@ -556,14 +556,14 @@ setuphtml <- function(resdir,cleanslate=FALSE) {
 #'     results. The origin came from Ian Taylor although I have
 #'     modified the styles and ensure correct Version 3 CSS
 #'
-#' @param resdir the directory within the run directory that contains
+#' @param rundir the directory within the run directory that contains
 #'     all the plot results
 #' @param htmlname name of the css files generated; input to make_html
 #'     
 #' @export  
-#' @return nothing but it does generate a .css file in the resdir
-write_css <- function(resdir,htmlname) {
-  filename <- filenametopath(resdir,paste0(htmlname,".css"))
+#' @return nothing but it does generate a .css file in the rundir
+write_css <- function(rundir,htmlname) {
+  filename <- filenametopath(rundir,paste0(htmlname,".css"))
   cat('    \n',
       '    body {\n',
       '      font-size:  15px; \n',

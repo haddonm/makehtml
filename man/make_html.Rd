@@ -6,7 +6,7 @@
 \usage{
 make_html(
   replist = NULL,
-  resdir = NULL,
+  rundir = NULL,
   width = 500,
   openfile = TRUE,
   runnotes = NULL,
@@ -18,7 +18,7 @@ make_html(
 \arguments{
 \item{replist}{Object created by a run, can be NULL}
 
-\item{resdir}{Directory where a particular run's files, including 
+\item{rundir}{Directory where a particular run's files, including 
 any results, as tables and plots, and any other files, are all 
 held. Cannot be NULL.}
 

@@ -4,21 +4,21 @@
 \alias{setuphtml}
 \title{setuphtml initiates csv files listing results to be included}
 \usage{
-setuphtml(resdir, cleanslate = FALSE)
+setuphtml(rundir, cleanslate = FALSE)
 }
 \arguments{
-\item{resdir}{full path to the directory to contain the results}
+\item{rundir}{full path to the directory to contain the results}
 
 \item{cleanslate}{should the directory be emptied of all files first? 
 All html, png, RData, and css files in the directory will be 
 deleted. default=FALSE. This is obviously a very powerful and potentially 
 dangerous argument, hence it needs to be set =TRUE explicitly. It does 
-not delete any .csv files so if the resdir is used to store the data for
+not delete any .csv files so if the rundir is used to store the data for
 the run then 'cleanslate' will not affect the data.}
 }
 \value{
 invisibly, the full path to the resfile, after creating the file in 
-    resdir and potentially deleting all previous files contained in resdir
+    rundir and potentially deleting all previous files contained in rundir
 }
 \description{
 setuphtml always initiates the resultTable.csv file used to 
@@ -30,8 +30,8 @@ setuphtml always initiates the resultTable.csv file used to
 }
 \examples{
 indir <- tempdir()
-resdir <- filenametopath(indir,"results")
-dirExists(resdir,verbose=FALSE)
-resfile <- setuphtml(resdir)
-dir(resdir)
+rundir <- filenametopath(indir,"results")
+dirExists(rundir,verbose=FALSE)
+resfile <- setuphtml(rundir)
+dir(rundir)
 }

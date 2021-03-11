@@ -4,12 +4,12 @@
 \alias{addplot}
 \title{addplot adds a plot's filename to the autoresult csv file}
 \usage{
-addplot(filen, resdir, category = "any", caption = "")
+addplot(filen, rundir, category = "any", caption = "")
 }
 \arguments{
 \item{filen}{full path and filename for file being added}
 
-\item{resdir}{full path to the directory to contain the results}
+\item{rundir}{full path to the directory to contain the results}
 
 \item{category}{what HTML tab should it be added to? default="any"
 obviously? you would want to change this.}
@@ -32,12 +32,12 @@ addplot is used to facilitate the production of
 }
 \examples{
 indir <- tempdir()
-resdir <- filenametopath(indir,"result")
-dirExists(resdir,verbose=FALSE)
-resfile <- setuphtml(resdir=resdir)
+rundir <- filenametopath(indir,"result")
+dirExists(rundir,verbose=FALSE)
+resfile <- setuphtml(rundir=rundir)
 filename <- "example.png" # must be a png file
 png(filename=filename,width=7,height=4,units="in",res=300)
 plot(runif(100),runif(100),type="p")
-addplot(filen=filename,resdir=resdir,"A_category",caption="Example Figure")  
-dir(resdir)
+addplot(filen=filename,rundir=rundir,"A_category",caption="Example Figure")  
+dir(rundir)
 }

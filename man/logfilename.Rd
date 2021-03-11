@@ -38,14 +38,14 @@ logfilename is used to facilitate the produciton of
 }
 \examples{
 indir <- tempdir()
-resdir <- filenametopath(indir,"result")
-dirExists(resdir,verbose=FALSE)
-resfile <- setuphtml(resdir)
-filename <- filenametopath(resdir,"example.png")
+rundir <- filenametopath(indir,"result")
+dirExists(rundir,verbose=FALSE)
+resfile <- setuphtml(rundir)
+filename <- filenametopath(rundir,"example.png")
 png(filename=filename,width=7,height=4,units="in",res=300)
 plot(runif(100),runif(100),type="p")
 dev.off()  
 logfilename(filename=filename,resfile=resfile,"A_category",
             caption="Example Figure")
-dir(resdir)
+dir(rundir)
 }
