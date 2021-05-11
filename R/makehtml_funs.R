@@ -345,7 +345,8 @@ make_html <- function(replist=NULL,
                       verbose=TRUE,
                       packagename="aMSE",
                       htmlname="aMSE") {
-  # replist=reportlist;rundir=rundir;width=500;openfile=TRUE;runnotes=runnotes;verbose=TRUE
+  # replist=reportlist;rundir=resdir;width=500;openfile=TRUE;runnotes=runnotes;
+  # verbose=TRUE; packagename="abspatR";htmlname="abspatR"
   # Clarify data
   if(is.null(rundir)) stop("input 'rundir' required \n")
   write_css(rundir,htmlname)
@@ -411,7 +412,7 @@ make_html <- function(replist=NULL,
       
       if (!is.null(runnotes)) {
         for(i in 1:length(runnotes)) {
-          cat('<p><b>Notes:</b>\n',paste(runnotes,collapse='</b>\n'),
+          cat('<p><b>Notes:</b>\n',paste(runnotes[i],collapse='</b>\n'),
               '</p>\n\n',sep="", file=htmlfile, append=TRUE)
         }
       } # end of runnotes
