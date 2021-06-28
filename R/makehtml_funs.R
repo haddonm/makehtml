@@ -26,7 +26,7 @@
 #' rundir <- filenametopath(indir,"result")
 #' dirExists(rundir,verbose=FALSE)
 #' resfile <- setuphtml(rundir=rundir)
-#' filename <- "example.png" # must be a png file
+#' filename <- filenametopath(rundir,"example.png") # must be a png file
 #' png(filename=filename,width=7,height=4,units="in",res=300)
 #' plot(runif(100),runif(100),type="p")
 #' addplot(filen=filename,rundir=rundir,"A_category",caption="Example Figure")  
@@ -517,11 +517,13 @@ pathtype <- function(inpath) {
 #'     All html, png, RData, and css files in the directory will be 
 #'     deleted. default=FALSE. This is obviously a very powerful and potentially 
 #'     dangerous argument, hence it needs to be set =TRUE explicitly. It does 
-#'     not delete any .csv files so if the rundir is used to store the data for
-#'     the run then 'cleanslate' will not affect the data. 
+#'     not delete any .csv files or .RData files so if the rundir is used to 
+#'     store the data or result-objects for a run then 'cleanslate' will not 
+#'     affect those files. 
 #'
 #' @return invisibly, the full path to the resfile, after creating the file in 
-#'     rundir and potentially deleting all previous files contained in rundir
+#'     rundir and potentially deleting all previous html, png, and .css files 
+#'     contained in rundir
 #' @export
 #'
 #' @examples
@@ -534,7 +536,7 @@ setuphtml <- function(rundir,cleanslate=FALSE) {
   # rundir="./../../rcode2/aMSEUse/out/testrun"; cleanslate=TRUE
   if (cleanslate) {
     allfiles <- dir(rundir)
-    types <- c(".html",".png",".RData",".css")
+    types <- c(".html",".png",".css")
     ntype <- length(types)
     for (j in 1:ntype) {
       pick <- grep(types[j],allfiles)

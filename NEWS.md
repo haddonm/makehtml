@@ -1,5 +1,7 @@
 # NEWS
 
+* 2021-06-28 0.0.1.400 I removed .RData files from being deleted when cleanslate=TRUE in the 'setuphtml' function. This is important if anyone saves objects as .RData files in the rundir, which would be a good place to keep them.
+
 * 0.0.1.500 Improved the home page layout and tidied addplot and addtable
 
 * 0.0.1.650 altered 'setuphtml' so that 'cleanslate' does not delete .csv files, which prevents 'cleanslate' deleting the data files if resdir is also used to store a run's data. 

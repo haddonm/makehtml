@@ -13,12 +13,14 @@ setuphtml(rundir, cleanslate = FALSE)
 All html, png, RData, and css files in the directory will be 
 deleted. default=FALSE. This is obviously a very powerful and potentially 
 dangerous argument, hence it needs to be set =TRUE explicitly. It does 
-not delete any .csv files so if the rundir is used to store the data for
-the run then 'cleanslate' will not affect the data.}
+not delete any .csv files or .RData files so if the rundir is used to 
+store the data or result-objects for a run then 'cleanslate' will not 
+affect those files.}
 }
 \value{
 invisibly, the full path to the resfile, after creating the file in 
-    rundir and potentially deleting all previous files contained in rundir
+    rundir and potentially deleting all previous html, png, and .css files 
+    contained in rundir
 }
 \description{
 setuphtml always initiates the resultTable.csv file used to 

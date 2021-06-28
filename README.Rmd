@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 # Latest Changes
 
-Read the news.md for the latest changes to the codebase.
+* 2021-06-28 0.0.1.400 I removed .RData files from being deleted when cleanslate=TRUE in the 'setuphtml' function. This is important if anyone saves objects as .RData files in the rundir, which would be a good place to keep them.
 
 
 # makehtml
@@ -25,7 +25,7 @@ Read the news.md for the latest changes to the codebase.
 
 Generic R code for producing multi-tabbed HTML output for plotted results in a specific directory. The objective is to provide a standard method for an initial presentation of extensive results from an analysis. Rmarkdown is wondferful but sometimes one just needs to review the data and the results and so needs a convenient way of viewing tables and plots. makehtml aims to provide that method.
 
-This code is adapted and revised from code put together by Ian Taylor inside the R package __r4ss__. Essentially it creates a CSS3 file that is used by a series of HTML files, each of which represents a user defined category of results. All plots should be .png files, and all tables are derived from saved .csv files. All files, the CSS, HTML, .png and csv files are saved to a user defined directory (_resdir_), which is the main user input requirement. One can now provide a name for the webpages rather than use the default, which, for my convenience is set to 'aMSE', and this can be done in the _make_html_ function by changing the value of the _analysis_ argument.
+This code is adapted and revised from code put together by Ian Taylor inside the R package __r4ss__. Essentially it creates a CSS3 file that is used by a series of HTML files, each of which represents a user defined category of results. All plots should be .png files, and all tables are derived from saved .csv files. All files, the CSS, HTML, .png and csv files are saved to a user defined directory (_rundir_), which is the main user input requirement. One can now provide a name for the webpages rather than use the default, which, for my convenience is set to 'aMSE', and this can be done in the _make_html_ function by changing the value of the _analysis_ argument.
 
 
 ## Installation
@@ -60,10 +60,10 @@ starttime <- as.character(Sys.time())
 
 # obviously you should define your own directory
 indir <- "C:/Users/User/Dropbox/A_code/makehtmlUse/" 
-resdir <- filenametopath(indir,"result")
-dirExists(resdir,verbose=TRUE)
+rundir <- filenametopath(indir,"result")
+dirExists(rundir,verbose=TRUE)
 analysis <- "Schaefer"
-resfile <- setuphtml(resdir=resdir,cleanslate=TRUE)
+resfile <- setuphtml(rundir=rundir,cleanslate=TRUE)
 
 # Some data
 catch <- c(60913,72294,78353,91522,78288,110417,114590,76841,41965,
@@ -76,17 +76,17 @@ schaef <- as.data.frame(cbind(year=1934:1955,effort=effort,catch=catch,
                 cpue=catch/effort)) # Schaefer's 1957 yellowfin data
 # First save the data; obvioulsy you should use unique filenames
 filen <- "schaef.csv"  # csv files only
-addtable(intable=schaef,filen=filen,resdir=resdir,category="data",
+addtable(intable=schaef,filen=filen,rundir=rundir,category="data",
          caption="Schaefer's original 1957 Yellowfin Tuna fishery data.")
 # addtable logs the filename automatically
 # sort the table on catch, just to provide two tables
 filen <- "sortedschaef.csv"
 sortyft <- schaef[order(schaef[,"catch"]),]
-addtable(intable=sortyft,filen=filen,resdir=resdir,category="data",
+addtable(intable=sortyft,filen=filen,rundir=rundir,category="data",
          caption="The Schaefer 1957 data sorted on catch.")
 
 # plot the timeseries of cpue and catch,  only png files
-filename <- filenametopath(resdir,"Schaefer_Fisherydata.png")
+filename <- filenametopath(rundir,"Schaefer_Fisherydata.png")
 plotprep(width=7,height=4.5,filename=filename,cex=0.9,verbose=FALSE)
 parset(plots=c(2,1))
 ymax <- getmax(schaef$cpue)
@@ -96,27 +96,27 @@ ymax <- getmax(schaef$catch)
 plot(schaef$year,schaef$catch,type="l",lwd=2,ylim=c(0,ymax),
      panel.first=grid(),xlab="",ylab="Catch")
 caption <- "The Schaefer Yellowfin tuna fishery data from 1957."
-addplot(filen=filename,resdir=resdir,category="Fishery",caption=caption)  
+addplot(filen=filename,rundir=rundir,category="Fishery",caption=caption)  
 
 # plot the catch against the effort
-filename <- filenametopath(resdir,"Schaefer_CatchvEffort.png")
+filename <- filenametopath(rundir,"Schaefer_CatchvEffort.png")
 caption <- "The Schaefer Yellowfin tuna data Catch vs Effort."
 plotprep(width=7,height=3,filename=filename,cex=0.9,verbose=FALSE)
 ymax <- getmax(schaef$catch)
 plot(schaef$effort,schaef$catch,type="p",pch=16,cex=1.2,ylim=c(0,ymax),
      panel.first=grid(),xlab="Effort",ylab="Catch")
-addplot(filen=filename,resdir=resdir,category="Fishery",caption=caption)  
+addplot(filen=filename,rundir=rundir,category="Fishery",caption=caption)  
 
 # plot the effort data; if filename="" no png file is produced or added, but a
 # new plot is certainly generated. Once as you want it, then use plotfilename.
-filename <- filenametopath(resdir,"Schaefer_Effortdata.png")
+filename <- filenametopath(rundir,"Schaefer_Effortdata.png")
 caption <- "The Schaefer Yellowfin tuna effort data from 1957."
 plotprep(width=7,height=4.5,newdev=FALSE,filename=filename,cex=0.9,
          verbose=FALSE)
 ymax <- getmax(schaef$effort)
 plot(schaef$year,schaef$effort,type="l",lwd=2,ylim=c(0,ymax),
      panel.first=grid(),xlab="",ylab="Effort Class 4 clipper days '000s")
-addplot(filen=filename,resdir=resdir,category="Effort",caption=caption)  
+addplot(filen=filename,rundir=rundir,category="Effort",caption=caption)  
 
 endtime <- as.character(Sys.time())
 
@@ -129,10 +129,10 @@ str(reportlist,max.level = 1)
 
 runnotes <- "This is merely to illustrate how to use the package."
 # If you unhash the make_html component it will open the local 
-# website generated inside resdir, if openfile=FALSE it will be 
+# website generated inside rundir, if openfile=FALSE it will be 
 # generated but not opened.
 #
-# make_html(replist=reportlist,resdir=resdir,width=500,openfile=TRUE,
+# make_html(replist=reportlist,rundir=rundir,width=500,openfile=TRUE,
 #           runnotes=runnotes,verbose=FALSE,packagename="makehtml",
 #           htmlname="makehtml")
 

@@ -35,7 +35,7 @@ indir <- tempdir()
 rundir <- filenametopath(indir,"result")
 dirExists(rundir,verbose=FALSE)
 resfile <- setuphtml(rundir=rundir)
-filename <- "example.png" # must be a png file
+filename <- filenametopath(rundir,"example.png") # must be a png file
 png(filename=filename,width=7,height=4,units="in",res=300)
 plot(runif(100),runif(100),type="p")
 addplot(filen=filename,rundir=rundir,"A_category",caption="Example Figure")  
