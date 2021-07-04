@@ -3,7 +3,12 @@
 
 # Latest Changes
 
-  - 2021-06-28 0.0.1.400 I removed .RData files from being deleted when
+-   2021-07-04 0.0.1 Development is ongoing but makehtml is now
+    operational so I have removed the fourth development number. Today I
+    have added an addtext function for adding text blocks to a tab. Next
+    steps might be to try to simplify adding objects even further.
+
+-   2021-06-28 0.0.1.400 I removed .RData files from being deleted when
     cleanslate=TRUE in the ‘setuphtml’ function. This is important if
     anyone saves objects as .RData files in the rundir, which would be a
     good place to keep them.
@@ -11,7 +16,6 @@
 # makehtml
 
 <!-- badges: start -->
-
 <!-- badges: end -->
 
 Generic R code for producing multi-tabbed HTML output for plotted
@@ -129,6 +133,11 @@ ymax <- getmax(schaef$effort)
 plot(schaef$year,schaef$effort,type="l",lwd=2,ylim=c(0,ymax),
      panel.first=grid(),xlab="",ylab="Effort Class 4 clipper days '000s")
 addplot(filen=filename,rundir=rundir,category="Effort",caption=caption)  
+txt <- c("Here is an example of text that might want to be added to one of ",
+         "the html tabs. In this case, of course, the text is merely here to ",
+         "illustrate how to do this and to see if I can develop a means to ",
+         "format the material seperately by including custom CSS code.")
+addtext(txt=txt,rundir,filename="test2.txt",category="Effort")
 
 endtime <- as.character(Sys.time())
 
@@ -139,14 +148,14 @@ reportlist <- list(  #these 2 are minimal requirements for the replist
 )
 str(reportlist,max.level = 1)
 #> List of 2
-#>  $ starttime: chr "2021-06-28 17:01:43"
-#>  $ endtime  : chr "2021-06-28 17:01:43"
+#>  $ starttime: chr "2021-07-04 13:59:41"
+#>  $ endtime  : chr "2021-07-04 13:59:41"
 
 runnotes <- "This is merely to illustrate how to use the package."
-# If you unhash the make_html component it will open the local 
-# website generated inside rundir, if openfile=FALSE it will be 
+# If you unhash the make_html component it will open the local
+# website generated inside rundir, if openfile=FALSE it will be
 # generated but not opened.
-#
+
 # make_html(replist=reportlist,rundir=rundir,width=500,openfile=TRUE,
 #           runnotes=runnotes,verbose=FALSE,packagename="makehtml",
 #           htmlname="makehtml")

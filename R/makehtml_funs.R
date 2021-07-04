@@ -89,6 +89,33 @@ addtable <- function(intable,filen,rundir,category="any",caption="",big=FALSE) {
   }
 } # end of addtable
 
+
+#' @title addtext literally enables the addition of a text block to a tab
+#' 
+#' @description addtext provides a solution for when one wants to add a block
+#'     of explanatory text to a tab in the internal website created by make_html.
+#'
+#' @param txt the vector of character strings to be added as a text block.
+#' @param rundir full path to the directory to contain the results
+#' @param filename the name of text or CSV file to store ready for inclusion in the 
+#'     htmlfile defined by category. Be sure to include the filetype .txt
+#' @param category what HTML tab should it be added to? default="text"
+#'
+#' @return nothing but it does add text to a tab within an html file in rundir. 
+#'     It does not make a note in resultTable.csv
+#' @export
+#'
+#' @examples
+#' print("wait on suitable data")
+#' # txt=txt;rundir=rundir; filename="test.txt";category="text"
+addtext <- function(txt,rundir,filename,category="text") {
+  filen <- filenametopath(rundir,filename)
+  writeLines(txt,filen)
+  resfile <- filenametopath(rundir,"resultTable.csv")
+  cat(c(filen,category,type="txtobj",as.character(Sys.time()),caption=""," \n"),
+      file=resfile,sep=",",append=TRUE)
+} # end of addtext
+
 #' @title dirExists: Checks for the existence of a directory
 #'
 #' @description dirExists: does a directory exist? It uses dir.exists
@@ -96,7 +123,7 @@ addtable <- function(intable,filen,rundir,category="any",caption="",big=FALSE) {
 #'     it it does not exist, but avoids the warning message is one
 #'     already exists. The option of not creating a new directory is
 #'     also present. This uses 'recursive=TRUE' inside the dir.create, so
-#'     one should be able to create directories as deeply downa path as
+#'     one should be able to create directories as deeply down a path as
 #'     wished. 
 #'
 #' @param indir a character string containing the name of the directory
@@ -389,14 +416,12 @@ make_html <- function(replist=NULL,
       }
     }
     cat('  </ul>\n', file=htmlfile, append=TRUE)
-    
     if (category=="Home") {    # add text on "Home" page
       newcat <- "Run Details"
       cat('\n\n<h2><a name="', category, '">', newcat, '</a></h2>\n', sep="",
           file=htmlfile, append=TRUE)
       MSE_info <- packageDescription(packagename)
-      goodnames <- c("Version", "Date", "Built",grep("Remote", names(MSE_info),
-                                                     value=TRUE))
+      goodnames <- c("Version", "Date", "Built", "Imports")
       MSE_info_text <- paste0('<b>',packagename,' info:</b><br><br>\n')
       for(name in goodnames) {
         MSE_info_text <- c(MSE_info_text,
@@ -416,7 +441,7 @@ make_html <- function(replist=NULL,
               '</p>\n\n',sep="", file=htmlfile, append=TRUE)
         }
       } # end of runnotes
-    } else {   #  split on category if statement
+    } else {   # Other than Home tab split on category if statement
       plotinfo <- tablefile[tablefile$category==category,]
       cat('\n\n<h2><a name="', category, '">', category, '</a></h2>\n', sep="",
           file=htmlfile, append=TRUE)
@@ -444,11 +469,14 @@ make_html <- function(replist=NULL,
         }
         if (plotinfo$type[i] == "txtobj") {
           datafile <- filenametopath(rundir,plotinfo$basename[i])
-          dat <- read.csv(file=datafile,header=TRUE,row.names=1)
-          htmltable(inmat=dat,filename=htmlfile,caption=plotinfo$caption[i],
-                    basename=plotinfo$basename[i],big=TRUE)
+          txt <- readLines(datafile)
+          nlines <- length(txt)
+          cat('<br><br> \n',file=htmlfile,append=TRUE)
+          cat('<p>NOTE: </p>\n',file=htmlfile,append=TRUE)
+          for (i in 1:nlines) {
+            cat('<p>',txt[i],'</p>\n',file=htmlfile,append=TRUE)
+          }
         }
-        
       }
     } # end of category if else statement
     
@@ -681,7 +709,7 @@ write_head <- function(htmlfile,htmlname) {
       '    <title>', htmlname, '</title>\n',
       '    <!-- source for text below is http://unraveled.com/publications/css_tabs/ -->\n',
       '    <!-- CSS Tabs is licensed under Creative Commons Attribution 3.0 - http://creativecommons.org/licenses/by/3.0/ -->\n',
-      '    <!-- When visiting unraveled.com/publications/css_tabs it appeared to be a toxic website - BE CAREFUL -->\n',
+      '    <!-- BE CAREFUL - When visiting unraveled.com/publications/css_tabs it appeared to be a toxic website. lots of popups! -->\n',
       '    \n',
       '    <link href=',paste0(htmlname,".css"),' rel="stylesheet" type="text/css"> \n',
       '    \n',

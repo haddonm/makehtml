@@ -2,6 +2,7 @@
 
 export(addplot)
 export(addtable)
+export(addtext)
 export(dirExists)
 export(endmakehtml)
 export(filenametopath)

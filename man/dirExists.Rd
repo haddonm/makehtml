@@ -30,7 +30,7 @@ dirExists: does a directory exist? It uses dir.exists
     it it does not exist, but avoids the warning message is one
     already exists. The option of not creating a new directory is
     also present. This uses 'recursive=TRUE' inside the dir.create, so
-    one should be able to create directories as deeply downa path as
+    one should be able to create directories as deeply down a path as
     wished.
 }
 \examples{
