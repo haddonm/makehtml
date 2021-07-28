@@ -366,6 +366,9 @@ logfilename <- function(filename,resfile,category="any",caption="",
 #' @export
 make_html <- function(replist=NULL,
                       rundir=NULL,
+                      datadir=NULL,
+                      controlfile=NULL,
+                      datafile=NULL,
                       width=500,
                       openfile=TRUE,
                       runnotes=NULL,
@@ -422,19 +425,20 @@ make_html <- function(replist=NULL,
           file=htmlfile, append=TRUE)
       MSE_info <- packageDescription(packagename)
       goodnames <- c("Version", "Date", "Built", "Imports")
-      MSE_info_text <- paste0('<b>',packagename,' info:</b><br><br>\n')
+      MSE_info_text <- paste0('<b>',packagename,':</b><br>\n')
       for(name in goodnames) {
         MSE_info_text <- c(MSE_info_text,
                            paste0(name, ": ",MSE_info[name], "<br>\n"))
       }
-      cat('\n\n<p>',MSE_info_text,'</p>\n',
-          '<p><b>Directory: </b>',rundir,'</p>\n',
-          '<p><b>Starting time of model: </b>',
-          replist$starttime,'</p>\n',
-          '<p><b>Finish time of model  : </b>',
-          replist$endtime,'</p>\n\n',
+      if (is.null(datadir)) datadir <- rundir
+      cat('\n\n<p>',MSE_info_text,'</p><br>\n',
+          '<b>Run directory  : </b>',rundir,'<br>\n',
+          '<b>Data directory: </b>',datadir,'<br>\n',
+          '<b>Control file: </b>',controlfile,'<br>\n',
+          '<b>Data file    : </b>',datafile,'<br>\n',
+          '<b>Starting time of model: </b>',replist$starttime,'<br>\n',
+          '<b>Finish time of model   : </b>',replist$endtime,'<br>\n\n',
           sep="",file=htmlfile, append=TRUE)
-      
       if (!is.null(runnotes)) {
         for(i in 1:length(runnotes)) {
           cat('<p><b>Notes:</b>\n',paste(runnotes[i],collapse='</b>\n'),
@@ -611,7 +615,7 @@ write_css <- function(rundir,htmlname) {
       '      font: bold 11px verdana, arial, sans-serif; /* set font as desired */\n',
       '      border-bottom: 1px solid #6c6; /* set border COLOR as desired */\n',
       '      list-style-type: none;\n',
-      '      padding: 3px 10px 2px 10px; /* THIRD number must change with respect to padding-top (X) below */\n',
+      '      padding: 3px 5px 2px 10px; /* THIRD number must change with respect to padding-top (X) below */\n',
       '    }\n',
       '    \n',
       '    #tabnav li { /* do not change */\n',
@@ -658,6 +662,10 @@ write_css <- function(rundir,htmlname) {
       '      border-bottom-color: #6c6;\n',
       '      padding-bottom: 2px;\n',
       '      padding-left: 0px;\n',
+      '    }\n',
+      '    p {\n',
+      '       padding-top: 0px;\n',
+      '       padding-bottom: 0px;\n',
       '    }\n',
       '    .odd {\n',
       '      background-color: #cfc;\n ',

@@ -3,6 +3,9 @@
 
 # Latest Changes
 
+-   2021-07-20 00.2 modified make\_html to improve the layout of the
+    home tab.
+
 -   2021-07-04 0.0.1 Development is ongoing but makehtml is now
     operational so I have removed the fourth development number. Today I
     have added an addtext function for adding text blocks to a tab. Next
@@ -74,10 +77,10 @@ library(rutilsMH) # for plotprep and parset
 starttime <- as.character(Sys.time())
 
 # obviously you should define your own directory
-indir <- "C:/Users/User/Dropbox/A_code/makehtmlUse/" 
+indir <- "C:/Users/Malcolm/Dropbox/A_code/makehtmlUse/" 
 rundir <- filenametopath(indir,"result")
 dirExists(rundir,verbose=TRUE)
-#> C:/Users/User/Dropbox/A_code/makehtmlUse/result :  exists
+#> C:/Users/Malcolm/Dropbox/A_code/makehtmlUse/result :  exists
 analysis <- "Schaefer"
 resfile <- setuphtml(rundir=rundir,cleanslate=TRUE)
 
@@ -148,8 +151,8 @@ reportlist <- list(  #these 2 are minimal requirements for the replist
 )
 str(reportlist,max.level = 1)
 #> List of 2
-#>  $ starttime: chr "2021-07-04 13:59:41"
-#>  $ endtime  : chr "2021-07-04 13:59:41"
+#>  $ starttime: chr "2021-07-28 11:40:20"
+#>  $ endtime  : chr "2021-07-28 11:40:21"
 
 runnotes <- "This is merely to illustrate how to use the package."
 # If you unhash the make_html component it will open the local

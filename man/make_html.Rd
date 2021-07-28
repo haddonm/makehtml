@@ -7,6 +7,9 @@
 make_html(
   replist = NULL,
   rundir = NULL,
+  datadir = NULL,
+  controlfile = NULL,
+  datafile = NULL,
   width = 500,
   openfile = TRUE,
   runnotes = NULL,
