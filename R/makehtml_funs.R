@@ -353,6 +353,9 @@ logfilename <- function(filename,resfile,category="any",caption="",
 #' @param rundir Directory where a particular run's files, including 
 #'     any results, as tables and plots, and any other files, are all 
 #'     held. Cannot be NULL.
+#' @param datadir full path to the data directory, if one is used
+#' @param controlfile the character name of the control file used.
+#' @param datafile the character name of the saudata data file.
 #' @param width Width of plots (in pixels). Default = 500
 #' @param openfile Automatically open index.html in default browser?
 #' @param runnotes Add additional notes to home page.

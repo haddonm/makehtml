@@ -25,6 +25,12 @@ make_html(
 any results, as tables and plots, and any other files, are all 
 held. Cannot be NULL.}
 
+\item{datadir}{full path to the data directory, if one is used}
+
+\item{controlfile}{the character name of the control file used.}
+
+\item{datafile}{the character name of the saudata data file.}
+
 \item{width}{Width of plots (in pixels). Default = 500}
 
 \item{openfile}{Automatically open index.html in default browser?}
