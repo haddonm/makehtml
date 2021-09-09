@@ -15,7 +15,11 @@ knitr::opts_chunk$set(
 
 # Latest Changes
 
-* 2021-07-20 00.2 modified make_html to improve the layout of the home tab.
+* 2021-09-10 0.0.4 Placed each runnote on separate line.
+
+* 2021-09-08 0.0.3 Added the harvest strategy file name (if provided).
+
+* 2021-07-20 0.0.2 modified make_html to improve the layout of the home tab.
 
 * 2021-07-04 0.0.1 Development is ongoing but makehtml is now operational so I have removed the fourth development number. Today I have added an addtext function for adding text blocks to a tab. Next steps might be to try to simplify adding objects even further. 
 

@@ -10,6 +10,7 @@ make_html(
   datadir = NULL,
   controlfile = NULL,
   datafile = NULL,
+  hsfile = NULL,
   width = 500,
   openfile = TRUE,
   runnotes = NULL,
@@ -30,6 +31,8 @@ held. Cannot be NULL.}
 \item{controlfile}{the character name of the control file used.}
 
 \item{datafile}{the character name of the saudata data file.}
+
+\item{hsfile}{the character name of the harvest strategy file, default=NULL}
 
 \item{width}{Width of plots (in pixels). Default = 500}
 
@@ -53,7 +56,8 @@ make_html writes a set of HTML files with tabbed
     and the HTML. By default, this function will look in the
     results directory where PNG and CSV files were created for a
     resultTable.csv file. HTML files are written to link to these plots
-    and put in the same directory.
+    and put in the same directory. Output now includes the control, data,
+    and HS files names.
 }
 \author{
 Originally Ian Taylor, modified by Malcolm Haddon

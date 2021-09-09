@@ -3,7 +3,11 @@
 
 # Latest Changes
 
--   2021-07-20 00.2 modified make\_html to improve the layout of the
+-   2021-09-10 0.0.4 Placed each runnote on separate line.
+
+-   2021-09-08 0.0.3 Added the harvest strategy file name (if provided).
+
+-   2021-07-20 0.0.2 modified make\_html to improve the layout of the
     home tab.
 
 -   2021-07-04 0.0.1 Development is ongoing but makehtml is now
@@ -151,8 +155,8 @@ reportlist <- list(  #these 2 are minimal requirements for the replist
 )
 str(reportlist,max.level = 1)
 #> List of 2
-#>  $ starttime: chr "2021-07-28 11:40:20"
-#>  $ endtime  : chr "2021-07-28 11:40:21"
+#>  $ starttime: chr "2021-09-10 09:20:40"
+#>  $ endtime  : chr "2021-09-10 09:20:40"
 
 runnotes <- "This is merely to illustrate how to use the package."
 # If you unhash the make_html component it will open the local

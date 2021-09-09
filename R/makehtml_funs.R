@@ -347,7 +347,8 @@ logfilename <- function(filename,resfile,category="any",caption="",
 #'     and the HTML. By default, this function will look in the
 #'     results directory where PNG and CSV files were created for a
 #'     resultTable.csv file. HTML files are written to link to these plots
-#'     and put in the same directory.
+#'     and put in the same directory. Output now includes the control, data,
+#'     and HS files names.
 #'
 #' @param replist Object created by a run, can be NULL
 #' @param rundir Directory where a particular run's files, including 
@@ -356,6 +357,7 @@ logfilename <- function(filename,resfile,category="any",caption="",
 #' @param datadir full path to the data directory, if one is used
 #' @param controlfile the character name of the control file used.
 #' @param datafile the character name of the saudata data file.
+#' @param hsfile the character name of the harvest strategy file, default=NULL
 #' @param width Width of plots (in pixels). Default = 500
 #' @param openfile Automatically open index.html in default browser?
 #' @param runnotes Add additional notes to home page.
@@ -372,6 +374,7 @@ make_html <- function(replist=NULL,
                       datadir=NULL,
                       controlfile=NULL,
                       datafile=NULL,
+                      hsfile=NULL,
                       width=500,
                       openfile=TRUE,
                       runnotes=NULL,
@@ -438,15 +441,17 @@ make_html <- function(replist=NULL,
           '<b>Run directory  : </b>',rundir,'<br>\n',
           '<b>Data directory: </b>',datadir,'<br>\n',
           '<b>Control file: </b>',controlfile,'<br>\n',
-          '<b>Data file    : </b>',datafile,'<br>\n',
+          '<b>Data file___: </b>',datafile,'<br>\n',
+          '<b>HS file_____: </b>',hsfile,'<br>\n',
           '<b>Starting time of model: </b>',replist$starttime,'<br>\n',
           '<b>Finish time of model   : </b>',replist$endtime,'<br>\n\n',
           sep="",file=htmlfile, append=TRUE)
       if (!is.null(runnotes)) {
-        for(i in 1:length(runnotes)) {
-          cat('<p><b>Notes:</b>\n',paste(runnotes[i],collapse='</b>\n'),
-              '</p>\n\n',sep="", file=htmlfile, append=TRUE)
+        cat('<p><b>Notes:</b>\n',file=htmlfile, append=TRUE)
+        for (i in 1:length(runnotes)) {
+          cat(runnotes[i],':<br>\n',file=htmlfile, append=TRUE)
         }
+        cat('</p>\n\n',file=htmlfile, append=TRUE)
       } # end of runnotes
     } else {   # Other than Home tab split on category if statement
       plotinfo <- tablefile[tablefile$category==category,]
