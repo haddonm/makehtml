@@ -9,13 +9,8 @@ setuphtml(rundir, cleanslate = FALSE)
 \arguments{
 \item{rundir}{full path to the directory to contain the results}
 
-\item{cleanslate}{should the directory be emptied of all files first? 
-All html, png, RData, and css files in the directory will be 
-deleted. default=FALSE. This is obviously a very powerful and potentially 
-dangerous argument, hence it needs to be set =TRUE explicitly. It does 
-not delete any .csv files or .RData files so if the rundir is used to 
-store the data or result-objects for a run then 'cleanslate' will not 
-affect those files.}
+\item{cleanslate}{this is now deprecated and has been replaced by the 
+function cleanrundir, which is safer and clearer.}
 }
 \value{
 invisibly, the full path to the resfile, after creating the file in 

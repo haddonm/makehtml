@@ -116,6 +116,65 @@ addtext <- function(txt,rundir,filename,category="text") {
       file=resfile,sep=",",append=TRUE)
 } # end of addtext
 
+#' @title cleanrundir removes all html, png, and css files from rundir
+#' 
+#' @description cleanrundir removes all html, png, and css files from 
+#'     rundir. In addition, if abmse=TRUE, the default, then up to eight
+#'     specific files are removed. This function is to replace the use of
+#'     cleanslate in setuphtml, which was more clumsy. The special aMSE 
+#'     files to be removed are: "final_harvestR.csv","glb.RData","hsargs.txt",
+#'     "HSstats.RData","popdefs.csv","propertyDD.csv","resultTable.csv",
+#'     "zonebiology.csv".
+#'
+#' @param rundir a specific directory used for an analytical run
+#' @param verbose default=TRUE. This assumes no action unless an explicit 
+#'     Y or y is entered at the prompt. If set to TRUE it will delete the
+#'     files with no explicit prompt.
+#' @param abmse should a specific set of files be deleted (see description)
+#'
+#' @return invisibly the remaining contents of rundir as a vector
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'   print("wait on an example file")
+#' }
+cleanrundir <- function(rundir,verbose=TRUE,abmse=TRUE) {
+  allfiles <- dir(rundir)
+  types <- c(".html",".png",".css")
+  ntype <- length(types)
+  pick <- NULL
+  for (j in 1:ntype) pick <- c(pick,grep(types[j],allfiles))
+  if (abmse) {
+    dfiles <- c("final_harvestR.csv","glb.RData","hsargs.txt",
+                "HSstats.RData","popdefs.csv","propertyDD.csv",
+                "resultTable.csv","zonebiology.csv")
+    nfile <- length(dfiles)
+    for (j in 1:nfile) {
+      if (dfiles[j] %in% allfiles) pick <- c(pick,grep(dfiles[j],allfiles))
+    } # end of nfile loop
+  }
+  pick <- sort(pick)
+  if (verbose) {
+    action <- FALSE    
+    print("Only the following files will remain")
+    print(allfiles[-pick])
+    cat("\n Inside ",rundir," \n\n")
+    ans <- readline(prompt="Proceed? Y or N: ")
+    if (ans %in% c("Y","y")) action <- TRUE
+  } else { 
+    action <-  TRUE 
+  }
+  if (action) {
+    nf <- length(pick)
+    if (nf > 0) 
+      for (i in 1:nf) file.remove(filenametopath(rundir,allfiles[pick[i]]))  
+  }
+  allfiles <- dir(rundir)
+  return(invisible(allfiles))
+} # end of cleanrundir
+
+
 #' @title dirExists: Checks for the existence of a directory
 #'
 #' @description dirExists: does a directory exist? It uses dir.exists
@@ -553,13 +612,8 @@ pathtype <- function(inpath) {
 #'     for each column.
 #'
 #' @param rundir full path to the directory to contain the results
-#' @param cleanslate should the directory be emptied of all files first? 
-#'     All html, png, RData, and css files in the directory will be 
-#'     deleted. default=FALSE. This is obviously a very powerful and potentially 
-#'     dangerous argument, hence it needs to be set =TRUE explicitly. It does 
-#'     not delete any .csv files or .RData files so if the rundir is used to 
-#'     store the data or result-objects for a run then 'cleanslate' will not 
-#'     affect those files. 
+#' @param cleanslate this is now deprecated and has been replaced by the 
+#'     function cleanrundir, which is safer and clearer. 
 #'
 #' @return invisibly, the full path to the resfile, after creating the file in 
 #'     rundir and potentially deleting all previous html, png, and .css files 
@@ -574,18 +628,7 @@ pathtype <- function(inpath) {
 #' dir(rundir)
 setuphtml <- function(rundir,cleanslate=FALSE) {  
   # rundir="./../../rcode2/aMSEUse/out/testrun"; cleanslate=TRUE
-  if (cleanslate) {
-    allfiles <- dir(rundir)
-    types <- c(".html",".png",".css")
-    ntype <- length(types)
-    for (j in 1:ntype) {
-      pick <- grep(types[j],allfiles)
-      nf <- length(pick)
-      if (nf > 0) 
-        for (i in 1:nf) file.remove(filenametopath(rundir,allfiles[pick[i]]))   
-      allfiles <- dir(rundir)
-    }
-  }
+  cleanslate <- FALSE
   resfile <- filenametopath(rundir,"resultTable.csv") 
   label <- c("file","category","type","timestamp","caption")
   cat(label,"\n",file = resfile,sep=",",append=FALSE)

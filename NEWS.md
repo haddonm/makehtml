@@ -1,6 +1,8 @@
 # NEWS
 
 
+* 2021-07-20 0.0.2 modified make_html to improve the layout of the home tab.
+
 * 2021-07-04 0.0.1 Development is ongoing but makehtml is now operational so I have removed the fourth development number. Today I have added an addtext function for adding text blocks to a tab. Next steps might be to try to simplify adding objects even further. 
 
 * 2021-06-28 0.0.1.400 I removed .RData files from being deleted when cleanslate=TRUE in the 'setuphtml' function. This is important if anyone saves objects as .RData files in the rundir, which would be a good place to keep them.

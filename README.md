@@ -3,22 +3,14 @@
 
 # Latest Changes
 
+-   2021-10-17 0.0.5 Deprecated the use of cleanslate in setuphtml and
+    replaced that with the function cleanrundir, which explcitly asks
+    permission to delete a bunch of files and so should be less
+    dangerous.
+
 -   2021-09-10 0.0.4 Placed each runnote on separate line.
 
 -   2021-09-08 0.0.3 Added the harvest strategy file name (if provided).
-
--   2021-07-20 0.0.2 modified make\_html to improve the layout of the
-    home tab.
-
--   2021-07-04 0.0.1 Development is ongoing but makehtml is now
-    operational so I have removed the fourth development number. Today I
-    have added an addtext function for adding text blocks to a tab. Next
-    steps might be to try to simplify adding objects even further.
-
--   2021-06-28 0.0.1.400 I removed .RData files from being deleted when
-    cleanslate=TRUE in the ‘setuphtml’ function. This is important if
-    anyone saves objects as .RData files in the rundir, which would be a
-    good place to keep them.
 
 # makehtml
 
@@ -81,10 +73,10 @@ library(rutilsMH) # for plotprep and parset
 starttime <- as.character(Sys.time())
 
 # obviously you should define your own directory
-indir <- "C:/Users/Malcolm/Dropbox/A_code/makehtmlUse/" 
+indir <- "C:/Users/User/Dropbox/A_code/makehtmlUse/" 
 rundir <- filenametopath(indir,"result")
 dirExists(rundir,verbose=TRUE)
-#> C:/Users/Malcolm/Dropbox/A_code/makehtmlUse/result :  exists
+#> C:/Users/User/Dropbox/A_code/makehtmlUse/result :  exists
 analysis <- "Schaefer"
 resfile <- setuphtml(rundir=rundir,cleanslate=TRUE)
 
@@ -155,8 +147,8 @@ reportlist <- list(  #these 2 are minimal requirements for the replist
 )
 str(reportlist,max.level = 1)
 #> List of 2
-#>  $ starttime: chr "2021-09-10 09:20:40"
-#>  $ endtime  : chr "2021-09-10 09:20:40"
+#>  $ starttime: chr "2021-10-17 14:46:52"
+#>  $ endtime  : chr "2021-10-17 14:46:53"
 
 runnotes <- "This is merely to illustrate how to use the package."
 # If you unhash the make_html component it will open the local

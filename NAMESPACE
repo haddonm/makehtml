@@ -3,6 +3,7 @@
 export(addplot)
 export(addtable)
 export(addtext)
+export(cleanrundir)
 export(dirExists)
 export(endmakehtml)
 export(filenametopath)
