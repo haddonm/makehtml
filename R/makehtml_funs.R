@@ -555,7 +555,7 @@ make_html <- function(replist=NULL,
   }
   # open HTML file automatically:
   if(openfile) browseURL(htmlhome)
-} # end of make_html2 tabs
+} # end of make_html tabs
 
 #' @title pathend determines what character is at the end of a path
 #'

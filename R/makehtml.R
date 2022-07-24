@@ -13,17 +13,12 @@
 #'     sequentilly plotting these into seperate named tabs in a web-site based
 #'     output. 
 #'     
-#' @section CSS functions:
-#' \itemize{
-#'   \item addcss literally prints the CSS codes to each HTML sheet generated 
-#'       for each category of output
+#' @seealso{
+#'   \link{setuphtml}, \link{make_html}, \link{addplot}, \link{addtable},
+#'   \link{addtext}, \link{dirExists}, \link{filenametopath}
 #' }
-#' @section HTML functions:
-#' \itemize{
-#'   \item make_html takes the input directory, looks for the filelist in 
-#'       plotFileTable_<name>.csv and then generates a Home sheet, and a 
-#'       separate sheet for each category of output file
-#' }
+#' 
+#' 
 #' @docType package
 #' @name makehtml
 NULL
