@@ -3,6 +3,7 @@
 \docType{package}
 \name{makehtml}
 \alias{makehtml}
+\alias{makehtml-package}
 \title{makehtml functions to generate tabbed HTML output files}
 \description{
 The makehtml package is designed to assist with the presentation
@@ -22,3 +23,8 @@ The makehtml package is designed to assist with the presentation
   \link{addtext}, \link{dirExists}, \link{filenametopath}
 }
 }
+\author{
+\strong{Maintainer}: Malcolm Haddon \email{malcolm.haddon@gmail.com}
+
+}
+\keyword{internal}

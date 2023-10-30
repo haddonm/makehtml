@@ -21,8 +21,10 @@
 #' 
 #' @docType package
 #' @name makehtml
+#' @keywords internal
+"_PACKAGE"
 NULL
 
 #' @importFrom utils browseURL packageDescription read.csv write.table
-#' @importFrom grDevices dev.off
+#' @importFrom grDevices dev.off dev.cur
 NULL

@@ -33,7 +33,7 @@
 #' dir(rundir)
 addplot <- function(filen,rundir,category="any",caption="") {
   if (nchar(filen) > 0) {
-    dev.off()
+    if (names(dev.cur()) != "null device") dev.off()
     resfile <- filenametopath(rundir,"resultTable.csv")
     logfilename(filename=filen,resfile=resfile,category=category,
                 caption=caption)
@@ -440,8 +440,8 @@ make_html <- function(replist=NULL,
                       verbose=TRUE,
                       packagename="aMSE",
                       htmlname="aMSE") {
-  # replist=reportlist;rundir=resdir;width=500;openfile=TRUE;runnotes=runnotes;
-  # verbose=TRUE; packagename="abspatR";htmlname="abspatR"
+  # replist=NULL;rundir=rundir;width=500;openfile=TRUE;runnotes=runnotes;
+  # verbose=TRUE; packagename="abspatR";htmlname="S21"
   # Clarify data
   if(is.null(rundir)) stop("input 'rundir' required \n")
   write_css(rundir,htmlname)
@@ -457,7 +457,7 @@ make_html <- function(replist=NULL,
   # identify the categories and name each html file
   categories <- unique(tablefile$category)  # html tab names
   types <- tablefile$type   #  table or plot
-  for (icat in 0:length(categories)) { # icat=1
+  for (icat in 0:length(categories)) { # icat=14
     if(icat==0){
       category <- "Home"
       htmlfile <- paste0(rundir,"/",htmlname,".html")
@@ -552,7 +552,7 @@ make_html <- function(replist=NULL,
     } # end of category if else statement
     
     cat("\n\n</body>\n</html>", file=htmlfile, append=TRUE)
-  }
+  } # end of icat loop
   # open HTML file automatically:
   if(openfile) browseURL(htmlhome)
 } # end of make_html tabs
