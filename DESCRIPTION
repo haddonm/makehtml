@@ -3,7 +3,11 @@ Type: Package
 Title: Provides Generic Code for Producing Tabbed HTML for Presenting Plotted Results
 Version: 0.1.0
 Date: 2023-10-31
-Authors@R: person("Malcolm", "Haddon", email = "malcolm.haddon@gmail.com", role = c("aut", "cre"))
+Author@R: person(given="Malcolm",
+                  family="Haddon", 
+                  email = "malcolm.haddon@gmail.com", 
+                  role = c("aut", "cre"),
+                  comment=c(ORCID="0000-0001-6971-7585"))
 Maintainer: Malcolm Haddon <malcolm.haddon@gmail.com>
 Description: Contains code to include Cascading Style Sheet codes into a series of HTML files
     each of which constitutes a tab into a Home HTML file. Initially this is designed for use
