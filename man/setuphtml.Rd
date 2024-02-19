@@ -4,18 +4,14 @@
 \alias{setuphtml}
 \title{setuphtml initiates csv files listing results to be included}
 \usage{
-setuphtml(rundir, cleanslate = FALSE)
+setuphtml(rundir)
 }
 \arguments{
 \item{rundir}{full path to the directory to contain the results}
-
-\item{cleanslate}{this is now deprecated and has been replaced by the 
-function cleanrundir, which is safer and clearer.}
 }
 \value{
 invisibly, the full path to the resfile, after creating the file in 
-    rundir and potentially deleting all previous html, png, and .css files 
-    contained in rundir
+    rundir
 }
 \description{
 setuphtml always initiates the resultTable.csv file used to 
@@ -26,9 +22,10 @@ setuphtml always initiates the resultTable.csv file used to
     for each column.
 }
 \examples{
+require(codeutils)
 indir <- tempdir()
-rundir <- filenametopath(indir,"results")
-dirExists(rundir,verbose=FALSE)
+rundir <- pathtopath(indir,"results")
+dirExists(rundir,verbose=TRUE)
 resfile <- setuphtml(rundir)
 dir(rundir)
 }

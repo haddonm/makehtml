@@ -36,10 +36,11 @@ If the filen remains empty, then addtable does nothing.
 }
 \examples{
 \dontrun{
+require(codeutils)
 indir <- tempdir()
-rundir <- filenametopath(indir,"result")
+rundir <- pathtopath(indir,"result")
 dirExists(rundir,verbose=FALSE)
-resfile <- setuphtml(rundir,"example_only")
+resfile <- setuphtml(rundir)
 filen <- "example.csv"
 egtable <- matrix(rnorm(25,0,1),nrow=5,ncol=5)
 addtable(egtable,filen=filen,rundir=rundir,"A_category",

@@ -15,8 +15,8 @@ make_html(
   openfile = TRUE,
   runnotes = NULL,
   verbose = TRUE,
-  packagename = "aMSE",
-  htmlname = "aMSE"
+  packagename = "mainpackage",
+  htmlname = "htmlname"
 )
 }
 \arguments{

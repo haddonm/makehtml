@@ -24,7 +24,7 @@ The makehtml package is designed to assist with the presentation
 }
 }
 \author{
-\strong{Maintainer}: Malcolm Haddon \email{malcolm.haddon@gmail.com}
+\strong{Maintainer}: Malcolm Haddon \email{malcolm.haddon@gmail.com} (\href{https://orcid.org/0000-0001-6971-7585}{ORCID})
 
 }
 \keyword{internal}

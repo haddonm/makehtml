@@ -1,9 +1,9 @@
 Package: makehtml
 Type: Package
 Title: Provides Generic Code for Producing Tabbed HTML for Presenting Plotted Results
-Version: 0.1.0
-Date: 2023-10-31
-Author@R: person(given="Malcolm",
+Version: 0.1.1
+Date: 2024-02-19
+Authors@R: person(given="Malcolm",
                   family="Haddon", 
                   email = "malcolm.haddon@gmail.com", 
                   role = c("aut", "cre"),
@@ -17,6 +17,7 @@ Description: Contains code to include Cascading Style Sheet codes into a series 
 Depends: R (>= 3.5.0)
 License: GPL (>= 3)
 RoxygenNote: 7.2.3
+Imports: codeutils
 Suggests: 
     knitr,
     rmarkdown

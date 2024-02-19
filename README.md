@@ -3,37 +3,37 @@
 
 # Latest Changes
 
--   2021-10-17 0.0.5 Deprecated the use of cleanslate in setuphtml and
-    replaced that with the function cleanrundir, which explcitly asks
-    permission to delete a bunch of files and so should be less
-    dangerous.
-
--   2021-09-10 0.0.4 Placed each runnote on separate line.
-
--   2021-09-08 0.0.3 Added the harvest strategy file name (if provided).
+- 2024-02-19 0.1.1 Updated the readme file so the example works with new
+  libraries **codeutils** and **hplot**, adjusted ‘setuphtml()’ to
+  remove the deprecated ‘cleanslate’ (see ‘cleanrundir()’ function).
 
 # makehtml
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-Generic R code for producing multi-tabbed HTML output for plotted
-results in a specific directory. The objective is to provide a standard
-method for an initial presentation of extensive results from an
-analysis. Rmarkdown is wondferful but sometimes one just needs to review
-the data and the results and so needs a convenient way of viewing tables
-and plots. makehtml aims to provide that method.
+Generic R code for producing multi-tabbed HTML output for plotted and
+tabulating results into a specific directory. The objective is to
+provide a standard method for an initial presentation of what can be
+extensive results from an analysis. Rmarkdown and Rmd files are
+wonderful but sometimes one just needs to review the data and the
+results and so needs a convenient way of viewing tables and plots.
+**makehtml** aims to provide that method.
 
 This code is adapted and revised from code put together by Ian Taylor
-inside the R package **r4ss**. Essentially it creates a CSS3 file that
-is used by a series of HTML files, each of which represents a user
-defined category of results. All plots should be .png files, and all
-tables are derived from saved .csv files. All files, the CSS, HTML, .png
-and csv files are saved to a user defined directory (*rundir*), which is
-the main user input requirement. One can now provide a name for the
-webpages rather than use the default, which, for my convenience is set
-to ‘aMSE’, and this can be done in the *make\_html* function by changing
-the value of the *analysis* argument.
+inside the R package **r4ss**. Essentially it creates a CSS file that is
+used by a series of HTML files, each of which represents a user defined
+category of results (each generates a single tab in an internal wedsite.
+
+All plots should be .png files, and all tables are derived from saved
+.csv files.
+
+All files, the CSS, HTML, .png and .csv files are saved to a user
+defined directory (*rundir*), which is the main user input requirement.
+One can now provide a name for the webpages rather than use the default,
+which is set to ‘packagename’, so you might want to change that, and
+this can be done in the *make_html()* function by changing the value of
+the *packagename* and *htmlname* arguments.
 
 ## Installation
 
@@ -46,9 +46,10 @@ You can install the development version from
 # 
 # devtools::install_github("https://github.com/haddonm/makehtml")
 # 
-# # you will also need rutilsMH
+# # you will also need codutils and hplot
 # 
-# devtools::install_github("https://github.com/haddonm/rutilsMH")
+# devtools::install_github("https://github.com/haddonm/codeutils")
+# devtools::install_github("https://github.com/haddonm/hplot")
 ```
 
 Alternatively, you can generate a branch that you can work on by cloning
@@ -63,22 +64,30 @@ and GitHub at <https://r-pkgs.org/index.html>.
 
 ## Example
 
-This is a basic example which illustrates the use of makehtml, though I
-have hashed out the final call to *make\_html* so that the RMarkdown
-version of the readme.md file does not generate a local website:
+This is a basic example which illustrates the use of **makehtml**,
+though I have hashed out the final call to *make_html* so that the
+RMarkdown version of the readme.md file does not generate a local
+website:
 
 ``` r
 library(makehtml)
-library(rutilsMH) # for plotprep and parset
+library(codeutils) 
+library(hplot) # for plotprep and parset
+#> 
+#> Attaching package: 'hplot'
+#> The following objects are masked from 'package:codeutils':
+#> 
+#>     countgtzero, getmax, getmin
 starttime <- as.character(Sys.time())
 
-# obviously you should define your own directory
-indir <- "C:/Users/User/Dropbox/A_code/makehtmlUse/" 
-rundir <- filenametopath(indir,"result")
+# OBVIOUSLY you should define your own directory
+ddir <- getDBdir()
+indir <- pathtopath(ddir,"/A_codeUse/makehtmlUse/") 
+rundir <- pathtopath(indir,"result") # pathtopath combines paths consistently
 dirExists(rundir,verbose=TRUE)
-#> C:/Users/User/Dropbox/A_code/makehtmlUse/result :  exists
+#> c:/Users/Malcolm/DropBox/A_codeUse/makehtmlUse/result :  exists
 analysis <- "Schaefer"
-resfile <- setuphtml(rundir=rundir,cleanslate=TRUE)
+resfile <- setuphtml(rundir=rundir) # creates resultTable.csv in rundir
 
 # Some data
 catch <- c(60913,72294,78353,91522,78288,110417,114590,76841,41965,
@@ -93,7 +102,7 @@ schaef <- as.data.frame(cbind(year=1934:1955,effort=effort,catch=catch,
 filen <- "schaef.csv"  # csv files only
 addtable(intable=schaef,filen=filen,rundir=rundir,category="data",
          caption="Schaefer's original 1957 Yellowfin Tuna fishery data.")
-# addtable logs the filename automatically
+# addtable logs the filename automatically into resultTable.csv
 # sort the table on catch, just to provide two tables
 filen <- "sortedschaef.csv"
 sortyft <- schaef[order(schaef[,"catch"]),]
@@ -147,8 +156,8 @@ reportlist <- list(  #these 2 are minimal requirements for the replist
 )
 str(reportlist,max.level = 1)
 #> List of 2
-#>  $ starttime: chr "2021-10-17 14:46:52"
-#>  $ endtime  : chr "2021-10-17 14:46:53"
+#>  $ starttime: chr "2024-02-19 14:31:34.036428"
+#>  $ endtime  : chr "2024-02-19 14:31:34.241203"
 
 runnotes <- "This is merely to illustrate how to use the package."
 # If you unhash the make_html component it will open the local
@@ -157,5 +166,5 @@ runnotes <- "This is merely to illustrate how to use the package."
 
 # make_html(replist=reportlist,rundir=rundir,width=500,openfile=TRUE,
 #           runnotes=runnotes,verbose=FALSE,packagename="makehtml",
-#           htmlname="makehtml")
+#           htmlname="Schaefer_Example")
 ```

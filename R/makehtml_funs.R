@@ -22,15 +22,18 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' require(codeutils)
 #' indir <- tempdir()
-#' rundir <- filenametopath(indir,"result")
+#' rundir <- pathtopath(indir,"result")
 #' dirExists(rundir,verbose=FALSE)
 #' resfile <- setuphtml(rundir=rundir)
-#' filename <- filenametopath(rundir,"example.png") # must be a png file
+#' filename <- pathtopath(rundir,"example.png") # must be a png file
 #' png(filename=filename,width=7,height=4,units="in",res=300)
 #' plot(runif(100),runif(100),type="p")
 #' addplot(filen=filename,rundir=rundir,"A_category",caption="Example Figure")  
 #' dir(rundir)
+#' }
 addplot <- function(filen,rundir,category="any",caption="") {
   if (nchar(filen) > 0) {
     if (names(dev.cur()) != "null device") dev.off()
@@ -65,10 +68,11 @@ addplot <- function(filen,rundir,category="any",caption="") {
 #'
 #' @examples
 #' \dontrun{
+#' require(codeutils)
 #' indir <- tempdir()
-#' rundir <- filenametopath(indir,"result")
+#' rundir <- pathtopath(indir,"result")
 #' dirExists(rundir,verbose=FALSE)
-#' resfile <- setuphtml(rundir,"example_only")
+#' resfile <- setuphtml(rundir)
 #' filen <- "example.csv"
 #' egtable <- matrix(rnorm(25,0,1),nrow=5,ncol=5)
 #' addtable(egtable,filen=filen,rundir=rundir,"A_category",
@@ -77,14 +81,14 @@ addplot <- function(filen,rundir,category="any",caption="") {
 #' }
 addtable <- function(intable,filen,rundir,category="any",caption="",big=FALSE) {
   if (nchar(filen) > 0) {
-     filen <- filenametopath(rundir,filen)
+     filen <- pathtopath(rundir,filen)
      write.table(intable,file = filen,sep=",")
      if (big) { 
        type <- "bigtable"
      } else {
        type <- ""
      }
-     resfile <- filenametopath(rundir,"resultTable.csv")
+     resfile <- pathtopath(rundir,"resultTable.csv")
      logfilename(filen,resfile,category=category,caption=caption,type=type)
   }
 } # end of addtable
@@ -438,8 +442,8 @@ make_html <- function(replist=NULL,
                       openfile=TRUE,
                       runnotes=NULL,
                       verbose=TRUE,
-                      packagename="aMSE",
-                      htmlname="aMSE") {
+                      packagename="mainpackage",
+                      htmlname="htmlname") {
   # replist=NULL;rundir=rundir;width=500;openfile=TRUE;runnotes=runnotes;
   # verbose=TRUE; packagename="abspatR";htmlname="S21"
   # Clarify data
@@ -612,24 +616,20 @@ pathtype <- function(inpath) {
 #'     for each column.
 #'
 #' @param rundir full path to the directory to contain the results
-#' @param cleanslate this is now deprecated and has been replaced by the 
-#'     function cleanrundir, which is safer and clearer. 
 #'
 #' @return invisibly, the full path to the resfile, after creating the file in 
-#'     rundir and potentially deleting all previous html, png, and .css files 
-#'     contained in rundir
+#'     rundir
 #' @export
 #'
 #' @examples
+#' require(codeutils)
 #' indir <- tempdir()
-#' rundir <- filenametopath(indir,"results")
-#' dirExists(rundir,verbose=FALSE)
+#' rundir <- pathtopath(indir,"results")
+#' dirExists(rundir,verbose=TRUE)
 #' resfile <- setuphtml(rundir)
 #' dir(rundir)
-setuphtml <- function(rundir,cleanslate=FALSE) {  
-  # rundir="./../../rcode2/aMSEUse/out/testrun"; cleanslate=TRUE
-  cleanslate <- FALSE
-  resfile <- filenametopath(rundir,"resultTable.csv") 
+setuphtml <- function(rundir) {  
+  resfile <- pathtopath(rundir,"resultTable.csv") 
   label <- c("file","category","type","timestamp","caption")
   cat(label,"\n",file = resfile,sep=",",append=FALSE)
   return(invisible(resfile))

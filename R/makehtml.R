@@ -27,4 +27,5 @@ NULL
 
 #' @importFrom utils browseURL packageDescription read.csv write.table
 #' @importFrom grDevices dev.off dev.cur
+#' @importFrom codeutils pathtopath
 NULL
