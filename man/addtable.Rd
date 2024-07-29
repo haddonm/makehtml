@@ -35,16 +35,14 @@ If the filen remains empty, then addtable does nothing.
     containing these unloved results.
 }
 \examples{
-\dontrun{
-require(codeutils)
 indir <- tempdir()
-rundir <- pathtopath(indir,"result")
+rundir <- filenametopath(indir,"result")
 dirExists(rundir,verbose=FALSE)
 resfile <- setuphtml(rundir)
 filen <- "example.csv"
 egtable <- matrix(rnorm(25,0,1),nrow=5,ncol=5)
-addtable(egtable,filen=filen,rundir=rundir,"A_category",
+addtable(egtable,filen=filen,rundir=rundir,"ExampleTable",
             caption="An example Table")
 dir(rundir) # examine the resfile and the example.csv files.
-}
+make_html(rundir=rundir,packagename="makehtml",htmlname="exampletable") 
 }

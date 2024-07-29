@@ -57,7 +57,38 @@ make_html writes a set of HTML files with tabbed
     results directory where PNG and CSV files were created for a
     resultTable.csv file. HTML files are written to link to these plots
     and put in the same directory. Output now includes the control, data,
-    and HS files names.
+    and HS files names. This was written to facilitate the presentation of
+    result for an MSE, hence some of the names. But, of course, it can be
+    used for any set of results.
+}
+\examples{
+library(makehtml)
+indir <- tempdir()
+rundir <- filenametopath(indir,"result")
+dirExists(rundir,verbose=FALSE)
+resfile <- setuphtml(rundir=rundir)
+start <- Sys.time()
+addnotes <- "No warnings reported."
+filename <- filenametopath(rundir,"example.png") # must be a png file
+png(filename=filename,width=7,height=4,units="in",res=300)
+plot(runif(100),runif(100),type="p")
+addplot(filen=filename,rundir=rundir,"A_category",caption="Example Figure")
+filen <- "example.csv"
+egtable <- matrix(rnorm(25,0,1),nrow=5,ncol=5)
+addtable(egtable,filen=filen,rundir=rundir,"ExampleTable",
+            caption="An example Table")
+# make a character vector
+egtxt <- c("This is example text. Of course one could put anything in",
+           "here as commentary to other results. This function is ",
+           "here for completeness, though I use it very little.")
+addtext(egtxt,filen=filen,rundir=rundir,category="ExampleText")
+dir(rundir)
+runnotes <- c(paste0("RunTime = ",Sys.time() - start),
+              paste0("replicates = ",100),paste0("years projected = ",30),
+              addnotes)
+make_html(replist=NULL,rundir=rundir,datadir=rundir,hsfile="anyname",
+          width=500,openfile=TRUE,runnotes=runnotes,
+          packagename="makehtml",htmlname="example")
 }
 \author{
 Originally Ian Taylor, modified by Malcolm Haddon

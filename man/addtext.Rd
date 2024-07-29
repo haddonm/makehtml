@@ -25,6 +25,16 @@ addtext provides a solution for when one wants to add a block
     of explanatory text to a tab in the internal website created by make_html.
 }
 \examples{
-print("wait on suitable data")
-# txt=txt;rundir=rundir; filename="test.txt";category="text"
+indir <- tempdir()
+rundir <- filenametopath(indir,"result")
+dirExists(rundir,verbose=FALSE)
+resfile <- setuphtml(rundir)
+filen <- "example.txt"
+# make a character vector
+egtxt <- c("This is example text. Of course one could put anything in",
+           "here as commentary to other results. This function is ",
+           "here for completeness, though I use it very little.")
+addtext(egtxt,filen=filen,rundir=rundir,category="ExampleText")
+dir(rundir) # examine the resfile and the example.csv files.
+make_html(rundir=rundir,packagename="makehtml") 
 }

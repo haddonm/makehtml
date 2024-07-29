@@ -7,7 +7,7 @@
 addplot(filen, rundir, category = "any", caption = "")
 }
 \arguments{
-\item{filen}{full path and filename for file being added}
+\item{filen}{either just the filename or the full path and filename}
 
 \item{rundir}{full path to the directory to contain the results}
 
@@ -31,16 +31,22 @@ addplot is used to facilitate the production of
     webpage will have an 'any' tab containing these unloved results.
 }
 \examples{
-\dontrun{
-require(codeutils)
+library(makehtml)
 indir <- tempdir()
-rundir <- pathtopath(indir,"result")
+rundir <- filenametopath(indir,"result")
 dirExists(rundir,verbose=FALSE)
 resfile <- setuphtml(rundir=rundir)
-filename <- pathtopath(rundir,"example.png") # must be a png file
+filename <- filenametopath(rundir,"example.png") # must be a png file
 png(filename=filename,width=7,height=4,units="in",res=300)
 plot(runif(100),runif(100),type="p")
-addplot(filen=filename,rundir=rundir,"A_category",caption="Example Figure")  
-dir(rundir)
-}
+addplot(filen=filename,rundir=rundir,category="EG_Figure",caption="Eg Figure") 
+filename <- "example2.png" # note png requires full path, addplot doesn't
+png(filename=filenametopath(rundir,filename),width=7,height=4,units="in",
+    res=300)
+plot(runif(100),runif(100),type="l",lwd=2,col="red")
+# , .
+addplot(filen=filename,rundir=rundir,category="EG_Figure2",caption="Eg Figure2") 
+runnotes= c("can normally have both plots on one tab",
+            "but using tempdir behaves flakily")
+make_html(rundir=rundir,packagename="makehtml",runnotes=runnotes)
 }

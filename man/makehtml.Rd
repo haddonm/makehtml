@@ -2,8 +2,8 @@
 % Please edit documentation in R/makehtml.R
 \docType{package}
 \name{makehtml}
-\alias{makehtml}
 \alias{makehtml-package}
+\alias{makehtml}
 \title{makehtml functions to generate tabbed HTML output files}
 \description{
 The makehtml package is designed to assist with the presentation
@@ -11,10 +11,10 @@ The makehtml package is designed to assist with the presentation
     expected. For example, in an Abalone MSE, one would expect to summarize
     the data used to define the operating model for each run, to summarize
     the time-series outputs for the various populations and trends of 
-    interest, to summarinze the outcomes in terms of the performance
-    measured used, the outputs from teh harvest control rules trialed, and so
+    interest, to summarize the outcomes in terms of the performance
+    measured used, the outputs from the harvest control rules trialed, and so
     on, across an array of categories of output. makehtml assists by 
-    sequentilly plotting these into seperate named tabs in a web-site based
+    sequentially plotting these into separate named tabs in a web-site based
     output.
 }
 \seealso{

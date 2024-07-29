@@ -22,9 +22,8 @@ setuphtml always initiates the resultTable.csv file used to
     for each column.
 }
 \examples{
-require(codeutils)
 indir <- tempdir()
-rundir <- pathtopath(indir,"results")
+rundir <- filenametopath(indir,"results")
 dirExists(rundir,verbose=TRUE)
 resfile <- setuphtml(rundir)
 dir(rundir)

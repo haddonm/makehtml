@@ -10,7 +10,7 @@
 #'     the local website. If no category is added explicitly then the local 
 #'     webpage will have an 'any' tab containing these unloved results. 
 #'
-#' @param filen full path and filename for file being added
+#' @param filen either just the filename or the full path and filename
 #' @param rundir full path to the directory to contain the results
 #' @param category what HTML tab should it be added to? default="any"
 #'     obviously? you would want to change this.
@@ -22,22 +22,37 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' require(codeutils)
+#' library(makehtml)
 #' indir <- tempdir()
-#' rundir <- pathtopath(indir,"result")
+#' rundir <- filenametopath(indir,"result")
 #' dirExists(rundir,verbose=FALSE)
 #' resfile <- setuphtml(rundir=rundir)
-#' filename <- pathtopath(rundir,"example.png") # must be a png file
+#' filename <- filenametopath(rundir,"example.png") # must be a png file
 #' png(filename=filename,width=7,height=4,units="in",res=300)
 #' plot(runif(100),runif(100),type="p")
-#' addplot(filen=filename,rundir=rundir,"A_category",caption="Example Figure")  
-#' dir(rundir)
-#' }
+#' addplot(filen=filename,rundir=rundir,category="EG_Figure",caption="Eg Figure") 
+#' filename <- "example2.png" # note png requires full path, addplot doesn't
+#' png(filename=filenametopath(rundir,filename),width=7,height=4,units="in",
+#'     res=300)
+#' plot(runif(100),runif(100),type="l",lwd=2,col="red")
+#' # , .
+#' addplot(filen=filename,rundir=rundir,category="EG_Figure2",caption="Eg Figure2") 
+#' runnotes= c("can normally have both plots on one tab",
+#'             "but using tempdir behaves flakily")
+#' make_html(rundir=rundir,packagename="makehtml",runnotes=runnotes)
 addplot <- function(filen,rundir,category="any",caption="") {
   if (nchar(filen) > 0) {
     if (names(dev.cur()) != "null device") dev.off()
     resfile <- filenametopath(rundir,"resultTable.csv")
+    if (length(grep("/",filen)) > 0) {
+      filen <- filen
+    } else {
+      if (length(grep("\\\\",filen)) > 0) {
+        filen <- filen
+      } else {
+        filen <- filenametopath(rundir,filen)
+      }
+    }
     logfilename(filename=filen,resfile=resfile,category=category,
                 caption=caption)
   }
@@ -67,28 +82,26 @@ addplot <- function(filen,rundir,category="any",caption="") {
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' require(codeutils)
 #' indir <- tempdir()
-#' rundir <- pathtopath(indir,"result")
+#' rundir <- filenametopath(indir,"result")
 #' dirExists(rundir,verbose=FALSE)
 #' resfile <- setuphtml(rundir)
 #' filen <- "example.csv"
 #' egtable <- matrix(rnorm(25,0,1),nrow=5,ncol=5)
-#' addtable(egtable,filen=filen,rundir=rundir,"A_category",
+#' addtable(egtable,filen=filen,rundir=rundir,"ExampleTable",
 #'             caption="An example Table")
 #' dir(rundir) # examine the resfile and the example.csv files.
-#' }
+#' make_html(rundir=rundir,packagename="makehtml",htmlname="exampletable") 
 addtable <- function(intable,filen,rundir,category="any",caption="",big=FALSE) {
   if (nchar(filen) > 0) {
-     filen <- pathtopath(rundir,filen)
+     filen <- filenametopath(rundir,filen)
      write.table(intable,file = filen,sep=",")
      if (big) { 
        type <- "bigtable"
      } else {
        type <- ""
      }
-     resfile <- pathtopath(rundir,"resultTable.csv")
+     resfile <- filenametopath(rundir,"resultTable.csv")
      logfilename(filen,resfile,category=category,caption=caption,type=type)
   }
 } # end of addtable
@@ -110,8 +123,18 @@ addtable <- function(intable,filen,rundir,category="any",caption="",big=FALSE) {
 #' @export
 #'
 #' @examples
-#' print("wait on suitable data")
-#' # txt=txt;rundir=rundir; filename="test.txt";category="text"
+#' indir <- tempdir()
+#' rundir <- filenametopath(indir,"result")
+#' dirExists(rundir,verbose=FALSE)
+#' resfile <- setuphtml(rundir)
+#' filen <- "example.txt"
+#' # make a character vector
+#' egtxt <- c("This is example text. Of course one could put anything in",
+#'            "here as commentary to other results. This function is ",
+#'            "here for completeness, though I use it very little.")
+#' addtext(egtxt,filen=filen,rundir=rundir,category="ExampleText")
+#' dir(rundir) # examine the resfile and the example.csv files.
+#' make_html(rundir=rundir,packagename="makehtml") 
 addtext <- function(txt,rundir,filename,category="text") {
   filen <- filenametopath(rundir,filename)
   writeLines(txt,filen)
@@ -411,7 +434,9 @@ logfilename <- function(filename,resfile,category="any",caption="",
 #'     results directory where PNG and CSV files were created for a
 #'     resultTable.csv file. HTML files are written to link to these plots
 #'     and put in the same directory. Output now includes the control, data,
-#'     and HS files names.
+#'     and HS files names. This was written to facilitate the presentation of
+#'     result for an MSE, hence some of the names. But, of course, it can be
+#'     used for any set of results.
 #'
 #' @param replist Object created by a run, can be NULL
 #' @param rundir Directory where a particular run's files, including 
@@ -432,6 +457,35 @@ logfilename <- function(filename,resfile,category="any",caption="",
 #' @author Originally Ian Taylor, modified by Malcolm Haddon
 #'
 #' @export
+#' 
+#' @examples
+#' library(makehtml)
+#' indir <- tempdir()
+#' rundir <- filenametopath(indir,"result")
+#' dirExists(rundir,verbose=FALSE)
+#' resfile <- setuphtml(rundir=rundir)
+#' start <- Sys.time()
+#' addnotes <- "No warnings reported."
+#' filename <- filenametopath(rundir,"example.png") # must be a png file
+#' png(filename=filename,width=7,height=4,units="in",res=300)
+#' plot(runif(100),runif(100),type="p")
+#' addplot(filen=filename,rundir=rundir,"A_category",caption="Example Figure")
+#' filen <- "example.csv"
+#' egtable <- matrix(rnorm(25,0,1),nrow=5,ncol=5)
+#' addtable(egtable,filen=filen,rundir=rundir,"ExampleTable",
+#'             caption="An example Table")
+#' # make a character vector
+#' egtxt <- c("This is example text. Of course one could put anything in",
+#'            "here as commentary to other results. This function is ",
+#'            "here for completeness, though I use it very little.")
+#' addtext(egtxt,filen=filen,rundir=rundir,category="ExampleText")
+#' dir(rundir)
+#' runnotes <- c(paste0("RunTime = ",Sys.time() - start),
+#'               paste0("replicates = ",100),paste0("years projected = ",30),
+#'               addnotes)
+#' make_html(replist=NULL,rundir=rundir,datadir=rundir,hsfile="anyname",
+#'           width=500,openfile=TRUE,runnotes=runnotes,
+#'           packagename="makehtml",htmlname="example")
 make_html <- function(replist=NULL,
                       rundir=NULL,
                       datadir=NULL,
@@ -444,8 +498,6 @@ make_html <- function(replist=NULL,
                       verbose=TRUE,
                       packagename="mainpackage",
                       htmlname="htmlname") {
-  # replist=NULL;rundir=rundir;width=500;openfile=TRUE;runnotes=runnotes;
-  # verbose=TRUE; packagename="abspatR";htmlname="S21"
   # Clarify data
   if(is.null(rundir)) stop("input 'rundir' required \n")
   write_css(rundir,htmlname)
@@ -622,14 +674,13 @@ pathtype <- function(inpath) {
 #' @export
 #'
 #' @examples
-#' require(codeutils)
 #' indir <- tempdir()
-#' rundir <- pathtopath(indir,"results")
+#' rundir <- filenametopath(indir,"results")
 #' dirExists(rundir,verbose=TRUE)
 #' resfile <- setuphtml(rundir)
 #' dir(rundir)
 setuphtml <- function(rundir) {  
-  resfile <- pathtopath(rundir,"resultTable.csv") 
+  resfile <- filenametopath(rundir,"resultTable.csv") 
   label <- c("file","category","type","timestamp","caption")
   cat(label,"\n",file = resfile,sep=",",append=FALSE)
   return(invisible(resfile))
