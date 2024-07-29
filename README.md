@@ -71,21 +71,18 @@ website:
 
 ``` r
 library(makehtml)
-library(codeutils) 
-library(hplot) # for plotprep and parset
-#> 
-#> Attaching package: 'hplot'
-#> The following objects are masked from 'package:codeutils':
-#> 
-#>     countgtzero, getmax, getmin
+library(hplot) # for plotprep and parset; automates the use of png
 starttime <- as.character(Sys.time())
 
 # OBVIOUSLY you should define your own directory
-ddir <- getDBdir()
-indir <- pathtopath(ddir,"/A_codeUse/makehtmlUse/") 
-rundir <- pathtopath(indir,"result") # pathtopath combines paths consistently
+ddir <- paste0("c:/Users/",Sys.info()[["user"]],"/DropBox") # only if you use DropBox
+indir <- filenametopath(ddir,"/A_codeUse/makehtmlUse/") 
+rundir <- filenametopath(indir,"result") # define directory for results
 dirExists(rundir,verbose=TRUE)
-#> c:/Users/Malcolm/DropBox/A_codeUse/makehtmlUse/result :  exists
+#> c:/Users/Malcolm/DropBox//A_codeUse/makehtmlUse/result :  exists
+```
+
+``` r
 analysis <- "Schaefer"
 resfile <- setuphtml(rundir=rundir) # creates resultTable.csv in rundir
 
@@ -156,8 +153,11 @@ reportlist <- list(  #these 2 are minimal requirements for the replist
 )
 str(reportlist,max.level = 1)
 #> List of 2
-#>  $ starttime: chr "2024-02-19 14:31:34.036428"
-#>  $ endtime  : chr "2024-02-19 14:31:34.241203"
+#>  $ starttime: chr "2024-07-29 10:50:27.363649"
+#>  $ endtime  : chr "2024-07-29 10:50:27.575136"
+```
+
+``` r
 
 runnotes <- "This is merely to illustrate how to use the package."
 # If you unhash the make_html component it will open the local
