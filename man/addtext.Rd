@@ -11,8 +11,8 @@ addtext(txt, rundir, filename, category = "text")
 
 \item{rundir}{full path to the directory to contain the results}
 
-\item{filename}{the name of text or CSV file to store ready for inclusion in the 
-htmlfile defined by category. Be sure to include the filetype .txt}
+\item{filename}{the name of text or CSV file to store ready for inclusion in
+the htmlfile defined by category. Be sure to include the filetype .txt}
 
 \item{category}{what HTML tab should it be added to? default="text"}
 }
@@ -34,7 +34,7 @@ filen <- "example.txt"
 egtxt <- c("This is example text. Of course one could put anything in",
            "here as commentary to other results. This function is ",
            "here for completeness, though I use it very little.")
-addtext(egtxt,filen=filen,rundir=rundir,category="ExampleText")
+addtext(egtxt,rundir=rundir,filename=filen,category="ExampleText")
 dir(rundir) # examine the resfile and the example.csv files.
 make_html(rundir=rundir,packagename="makehtml") 
 }

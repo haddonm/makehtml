@@ -114,8 +114,8 @@ addtable <- function(intable,filen,rundir,category="any",caption="",big=FALSE) {
 #'
 #' @param txt the vector of character strings to be added as a text block.
 #' @param rundir full path to the directory to contain the results
-#' @param filename the name of text or CSV file to store ready for inclusion in the 
-#'     htmlfile defined by category. Be sure to include the filetype .txt
+#' @param filename the name of text or CSV file to store ready for inclusion in
+#'     the htmlfile defined by category. Be sure to include the filetype .txt
 #' @param category what HTML tab should it be added to? default="text"
 #'
 #' @return nothing but it does add text to a tab within an html file in rundir. 
@@ -132,7 +132,7 @@ addtable <- function(intable,filen,rundir,category="any",caption="",big=FALSE) {
 #' egtxt <- c("This is example text. Of course one could put anything in",
 #'            "here as commentary to other results. This function is ",
 #'            "here for completeness, though I use it very little.")
-#' addtext(egtxt,filen=filen,rundir=rundir,category="ExampleText")
+#' addtext(egtxt,rundir=rundir,filename=filen,category="ExampleText")
 #' dir(rundir) # examine the resfile and the example.csv files.
 #' make_html(rundir=rundir,packagename="makehtml") 
 addtext <- function(txt,rundir,filename,category="text") {
