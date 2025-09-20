@@ -70,7 +70,7 @@ addplot <- function(filen,rundir,category="any",caption="") {
 #'     containing these unloved results.
 #'
 #' @param intable the table or data.frame to be saved and output
-#' @param filen only the filename being given to the table, no path included
+#' @param filen either just the filename or the full path and filename
 #' @param rundir full path to the directory to contain the results
 #' @param category what HTML tab should it be added to? default="any"
 #' @param caption the caption for the figure or table, default = ""
@@ -94,14 +94,22 @@ addplot <- function(filen,rundir,category="any",caption="") {
 #' make_html(rundir=rundir,packagename="makehtml",htmlname="exampletable") 
 addtable <- function(intable,filen,rundir,category="any",caption="",big=FALSE) {
   if (nchar(filen) > 0) {
-     filen <- filenametopath(rundir,filen)
+     resfile <- filenametopath(rundir,"resultTable.csv")    
+     if (length(grep("/",filen)) > 0) {
+       filen <- filen
+     } else {
+       if (length(grep("\\\\",filen)) > 0) {
+         filen <- filen
+       } else {
+         filen <- filenametopath(rundir,filen)
+       }
+     }
      write.table(intable,file = filen,sep=",")
      if (big) { 
        type <- "bigtable"
      } else {
        type <- ""
      }
-     resfile <- filenametopath(rundir,"resultTable.csv")
      logfilename(filen,resfile,category=category,caption=caption,type=type)
   }
 } # end of addtable

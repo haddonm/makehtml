@@ -10,6 +10,7 @@
 # makehtml
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 Generic R code for producing multi-tabbed HTML output for plotted and
@@ -79,10 +80,7 @@ ddir <- paste0("c:/Users/",Sys.info()[["user"]],"/DropBox") # only if you use Dr
 indir <- filenametopath(ddir,"/A_codeUse/makehtmlUse/") 
 rundir <- filenametopath(indir,"result") # define directory for results
 dirExists(rundir,verbose=TRUE)
-#> c:/Users/Malcolm/DropBox//A_codeUse/makehtmlUse/result :  exists
-```
-
-``` r
+#> c:/Users/MalcolmHaddon/DropBox//A_codeUse/makehtmlUse/result :  exists
 analysis <- "Schaefer"
 resfile <- setuphtml(rundir=rundir) # creates resultTable.csv in rundir
 
@@ -153,11 +151,8 @@ reportlist <- list(  #these 2 are minimal requirements for the replist
 )
 str(reportlist,max.level = 1)
 #> List of 2
-#>  $ starttime: chr "2024-07-29 10:50:27.363649"
-#>  $ endtime  : chr "2024-07-29 10:50:27.575136"
-```
-
-``` r
+#>  $ starttime: chr "2025-08-22 11:24:48.605518"
+#>  $ endtime  : chr "2025-08-22 11:24:48.837579"
 
 runnotes <- "This is merely to illustrate how to use the package."
 # If you unhash the make_html component it will open the local

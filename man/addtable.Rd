@@ -9,7 +9,7 @@ addtable(intable, filen, rundir, category = "any", caption = "", big = FALSE)
 \arguments{
 \item{intable}{the table or data.frame to be saved and output}
 
-\item{filen}{only the filename being given to the table, no path included}
+\item{filen}{either just the filename or the full path and filename}
 
 \item{rundir}{full path to the directory to contain the results}
 
