@@ -1,4 +1,95 @@
 
+#' @title addlist write a list's bits to a file and adds that to resultTable.csv
+#' 
+#' @description addlist it is common to want to include the contents of a list 
+#'     to the output tabs. addlist can include numeric constants, and vectors,
+#'     2D matrices and data.frames but not arrays or lists within lists.
+#'
+#' @param inlist A list object containing whatever a list will contain
+#' @param filen either just the filename or the full path and filename
+#' @param rundir full path to the directory to contain the results
+#' @param category what HTML tab should it be added to? default="any"
+#'     obviously? you would want to change this.
+#' @param caption the caption for the list object default = "",
+#'     This should not contain commas as this confuses the csv file.
+#'     But if you accidentally put some in they will be removed.
+#'
+#' @return nothing but it does add a line to resfile
+#' @export
+#'
+#' @examples
+#' library(makehtml)
+#' indir <- tempdir()
+#' rundir <- filenametopath(indir,"result")
+#' dirExists(rundir,verbose=FALSE)
+#' resfile <- setuphtml(rundir=rundir)
+#' filename <- filenametopath(rundir,"example.png") # must be a png file
+#' png(filename=filename,width=7,height=4,units="in",res=300)
+#' plot(runif(100),runif(100),type="p")
+#' addplot(filen=filename,rundir=rundir,category="EG_Figure",caption="Eg Figure") 
+#' filename <- "example2.png" # note png requires full path, addplot doesn't
+#' png(filename=filenametopath(rundir,filename),width=7,height=4,units="in",
+#'     res=300)
+#' plot(runif(100),runif(100),type="l",lwd=2,col="red")
+#' addplot(filen=filename,rundir=rundir,category="EG_Figure2",
+#'         caption="Eg Figure2") 
+#' x <- rnorm(10,mean=5,sd=1); y <- as.data.frame(cbind(x,x))
+#' z <- list(a=5,b="hello",c=rnorm(10,mean=5,sd=1))
+#' eg <- list(x=x,y=y,z=z)
+#' addlist(eg,filen="example.txt",rundir=rundir,category="listadded",
+#'         caption="List")
+#' runnotes= c("can normally have both plots on one tab",
+#'             "but using tempdir behaves flakily")
+#' make_html(rundir=rundir,packagename="makehtml",runnotes=runnotes)
+addlist <- function(inlist,filen,rundir,category="any",caption="") {
+  if (nchar(filen) > 0) {
+    filetype <- getextension(filen)
+    if (filetype != "txtobj") filen <- paste0(filen,".txt")
+    resfile <- filenametopath(rundir,"resultTable.csv") 
+    if (length(grep("/",filen)) > 0) {
+      filen <- filen
+    } else {
+      if (length(grep("\\\\",filen)) > 0) {
+        filen <- filen
+      } else {
+        filen <- filenametopath(rundir,filen)
+      }
+    }  
+    objnames <- names(inlist)
+    nobs <- length(objnames)
+    cat(paste0(objnames,collapse="  "),"\n\n", file=filen,append=FALSE)
+    for (i in 1:nobs) { # i = 2
+      obj <- inlist[[i]]  
+      cat(objnames[i],"\n",file=filen,append=TRUE)
+      if (inherits(obj,"numeric")) {
+        cat(obj,"\n\n\n",file=filen,append=TRUE)
+      }
+      if (inherits(obj,c("matrix","data.frame"))) {
+        if (inherits(obj,what="array")) {
+          cat("Array objects within lists are not printed. \n")
+        } else { 
+          numrow <- nrow(obj)
+          numcol <- ncol(obj)
+          cat(colnames(obj),"\n",file=filen,append=TRUE)
+          for (j in 1:numrow) {
+            txt <- rownames(obj)[j]
+            for (k in 1:numcol) txt <- paste0(txt," ",obj[j,k])
+            cat(txt,"\n",file=filen,append=TRUE)
+          }
+          cat("\n\n\n",file=filen,append=TRUE)
+        }
+      }
+      if (inherits(obj,"list")) {
+        cat("List objects within lists are not printed. \n",
+            file=filen,append=TRUE)
+      }
+    }   
+    resfile <- filenametopath(rundir,"resultTable.csv")
+    cat(c(filen,category=category,type="txtobj",as.character(Sys.time()),
+          caption=caption," \n"),
+        file=resfile,sep=",",append=TRUE)
+  }
+} # end of addlist
 
 #' @title addplot adds a plot's filename to the autoresult csv file
 #'
@@ -35,7 +126,6 @@
 #' png(filename=filenametopath(rundir,filename),width=7,height=4,units="in",
 #'     res=300)
 #' plot(runif(100),runif(100),type="l",lwd=2,col="red")
-#' # , .
 #' addplot(filen=filename,rundir=rundir,category="EG_Figure2",caption="Eg Figure2") 
 #' runnotes= c("can normally have both plots on one tab",
 #'             "but using tempdir behaves flakily")
